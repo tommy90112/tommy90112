@@ -3,10 +3,12 @@ name: Deploy portfolio to GitHub Pages
 on:
   push:
     branches: [main]
-    paths:
-      - 'portfolio/**'
-      - '.github/workflows/deploy.yml'
   workflow_dispatch:
+
+# No `paths:` filter on purpose. Path filters cannot be evaluated on the push
+# that creates a branch — there is no previous state to diff against — so the
+# very first deploy would silently never run. Rebuilding on a README-only
+# change is cheap; a deploy that quietly does not happen is not.
 
 permissions:
   contents: read
