@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#0B1019"/>
+  <!-- causal edges -->
+  <g stroke="#2E3A50" stroke-width="2.5" stroke-linecap="round">
+    <line x1="20" y1="20" x2="32" y2="38"/>
+    <line x1="44" y1="20" x2="32" y2="38"/>
+  </g>
+  <!-- intervened cause -->
+  <circle cx="20" cy="20" r="7" fill="#7C6AFF"/>
+  <!-- observed cause -->
+  <circle cx="44" cy="20" r="5.5" fill="#2E3A50"/>
+  <!-- effect -->
+  <circle cx="32" cy="42" r="6.5" fill="#F5B841"/>
+</svg>

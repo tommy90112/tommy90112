@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-ink-900 text-paper-200 font-sans antialiased;
+  }
+
+  /* Respect users who prefer reduced motion: kill every decorative animation. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  ::selection {
+    @apply bg-violet-500/30 text-paper-50;
+  }
+
+  /* Keyboard focus stays visible everywhere. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-violet-400 ring-offset-2 ring-offset-ink-900 rounded-sm;
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply w-full max-w-content mx-auto px-6 sm:px-8 lg:px-12;
+  }
+
+  .section {
+    @apply py-24 md:py-32;
+  }
+
+  /* Display headings — editorial serif */
+  .h-display {
+    @apply font-display font-normal text-paper-50;
+  }
+
+  .eyebrow {
+    @apply font-mono text-xs tracking-[0.18em] uppercase text-violet-400 inline-flex items-center gap-3;
+  }
+
+  .eyebrow::before {
+    content: '';
+    @apply w-8 h-px bg-violet-400/60;
+  }
+
+  .btn {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-200;
+  }
+
+  .btn-primary {
+    @apply btn bg-violet-500 text-white hover:bg-violet-400 hover:-translate-y-0.5;
+  }
+
+  .btn-ghost {
+    @apply btn border border-ink-500 text-paper-200 hover:border-violet-400 hover:text-paper-50;
+  }
+
+  .card {
+    @apply bg-ink-800 border border-ink-600 rounded-2xl transition-colors duration-300;
+  }
+
+  .card-hover {
+    @apply card hover:border-violet-500/50;
+  }
+
+  .chip {
+    @apply inline-flex items-center px-2.5 py-1 rounded-md bg-ink-700 border border-ink-600
+           font-mono text-[11px] text-paper-300;
+  }
+
+  .link-underline {
+    @apply relative text-paper-100 no-underline
+           after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-0 after:bg-violet-400
+           after:transition-[width] after:duration-300 hover:after:w-full;
+  }
+
+  /* Faint blueprint grid used behind the hero. */
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, rgba(46, 58, 80, 0.28) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(46, 58, 80, 0.28) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 78%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 78%);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Scroll-reveal: set by the useReveal composable. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

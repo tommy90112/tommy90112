@@ -9,11 +9,15 @@
   <a href="mailto:tommy90112@gmail.com"><img src="https://img.shields.io/badge/Email-tommy90112%40gmail.com-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"></a>
   <a href="https://www.linkedin.com/in/tommy90112/"><img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"></a>
   <a href="https://github.com/tommy90112"><img src="https://img.shields.io/badge/GitHub-tommy90112-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"></a>
+  <a href="https://tommy90112.github.io/tommy90112/"><img src="https://img.shields.io/badge/Portfolio-Live_site-7C6AFF?style=for-the-badge&logo=vuedotjs&logoColor=white" alt="Portfolio"></a>
 </p>
 
-<!-- TODO: 作品集網站上線後，把下面這行取消註解並放進上面的 badge 區塊
-  <a href="https://tommy90112.github.io"><img src="https://img.shields.io/badge/Portfolio-tommy90112.github.io-1f2937?style=for-the-badge&logo=react&logoColor=white" alt="Portfolio"></a>
--->
+<p align="center">
+  <sub>
+    An interactive walk through this work — including a clickable causal-intervention graph —
+    lives at <a href="https://tommy90112.github.io/tommy90112/">tommy90112.github.io/tommy90112</a>
+  </sub>
+</p>
 
 ---
 
@@ -133,6 +137,13 @@ Heterogeneous Graph Transformer · causal inference (SCM / do-calculus) · stack
 ![AWS](https://img.shields.io/badge/AWS-232F3E?style=flat-square&logo=amazonwebservices&logoColor=white)
 
 ---
+
+## This profile
+
+The [portfolio site](https://tommy90112.github.io/tommy90112/) is built from the
+[`portfolio/`](portfolio/) directory of this repository — Vue 3, TypeScript,
+Vite and Tailwind, with every data visualisation hand-written in SVG rather than
+pulled from a charting library. It deploys itself on push.
 
 ## More
 
