@@ -4,7 +4,8 @@
     // Required: the root tsconfig.json references this project.
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "baseUrl": ".",
+    // No `baseUrl`: it is deprecated in TS 7.0, and `paths` has resolved
+    // relative to this file's directory since TS 4.1.
     "paths": {
       "@/*": ["./src/*"]
     },
