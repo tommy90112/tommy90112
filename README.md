@@ -36,9 +36,7 @@ I work at the intersection of **statistics, causal inference, and graph machine 
 | Achievement | Event | Date |
 |---|---|---|
 | 🥈 **2nd Place** (1st place vacant) | National Expressway Intelligent Traffic Competition | Oct 2024 |
-| 🎤 **Invited Speaker** | 2025 Chinese Institute of Transportation Annual Conference | Dec 2025 |
 | 🏆 **Competing team — BitoPro Cryptocurrency Security track** | Agent for Truth Hackathon (DIGITIMES × NDC × AWS) | Mar 2026 |
-| 📊 **F1 0.85 / AUC 0.95** | Master's thesis (CI-RCT) on the Elliptic++ Bitcoin fraud network | 2026 |
 
 <!-- TODO: 補上其他獎項／證照／論文發表，格式照上面的表格即可
 | 🏅 獎項名稱 | 主辦單位／比賽名稱 | YYYY/MM |
