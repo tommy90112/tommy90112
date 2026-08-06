@@ -2,7 +2,6 @@
 
 <p align="center">
   <strong>Data Science Master's Student</strong><br>
-  Causal inference × graph neural networks — building models that explain <em>why</em>, not just predict <em>what</em>.
 </p>
 
 <p align="center">
