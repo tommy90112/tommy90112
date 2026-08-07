@@ -23,22 +23,30 @@ const grainStyle = {
 
 <template>
   <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
-    <!-- Base wash, slightly warmer at the top than the body colour -->
-    <div class="absolute inset-0 bg-gradient-to-b from-ink-900 via-ink-950 to-ink-950"></div>
+    <!-- Base wash: brightest at the top, settling toward the body colour.
+         Never reaches the darkest ink so the page keeps some depth to it. -->
+    <div class="absolute inset-0 bg-gradient-to-b from-ink-800 via-ink-900 to-ink-950"></div>
 
     <div
-      class="absolute -top-[10%] left-[8%] w-[46rem] h-[46rem] rounded-full blur-[120px]"
-      style="background: radial-gradient(circle, rgba(124, 106, 255, 0.20), transparent 66%)"
+      class="absolute -top-[12%] left-[6%] w-[52rem] h-[52rem] rounded-full blur-[120px]"
+      style="background: radial-gradient(circle, rgba(124, 106, 255, 0.34), transparent 66%)"
     ></div>
 
     <div
-      class="absolute top-[28%] -right-[8%] w-[40rem] h-[40rem] rounded-full blur-[130px]"
-      style="background: radial-gradient(circle, rgba(34, 184, 209, 0.14), transparent 68%)"
+      class="absolute top-[24%] -right-[10%] w-[46rem] h-[46rem] rounded-full blur-[130px]"
+      style="background: radial-gradient(circle, rgba(34, 184, 209, 0.24), transparent 68%)"
     ></div>
 
     <div
-      class="absolute bottom-[-14%] left-[26%] w-[44rem] h-[44rem] rounded-full blur-[140px]"
-      style="background: radial-gradient(circle, rgba(245, 184, 65, 0.075), transparent 68%)"
+      class="absolute bottom-[-16%] left-[22%] w-[48rem] h-[48rem] rounded-full blur-[140px]"
+      style="background: radial-gradient(circle, rgba(245, 184, 65, 0.15), transparent 68%)"
+    ></div>
+
+    <!-- Cool counter-light along the right edge, so the mid-page doesn't fall
+         into a dead zone between the three fields above. -->
+    <div
+      class="absolute top-[58%] left-[52%] w-[40rem] h-[40rem] rounded-full blur-[130px]"
+      style="background: radial-gradient(circle, rgba(149, 133, 255, 0.20), transparent 70%)"
     ></div>
 
     <!-- Fine grain: breaks up the banding that large blurred gradients leave

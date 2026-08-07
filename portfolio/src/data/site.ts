@@ -51,7 +51,6 @@ export const HERO_STATS = [
   { key: 'stats.thesis' },
   { key: 'stats.records' },
   { key: 'stats.award' },
-  { key: 'stats.talks' },
 ] as const
 
 export type VizKind = 'causal' | 'attribution' | 'network' | 'shockwave' | 'roc' | null
@@ -123,10 +122,10 @@ export const PROJECTS: readonly Project[] = [
     span: 'half',
   },
   {
-    id: 'stock',
-    repo: 'https://github.com/tommy90112/Stock-recommendation-system',
-    demo: null,
-    stack: ['Python', 'Flask', 'PostgreSQL', 'Jupyter'],
+    id: 'mva',
+    repo: 'https://github.com/tommy90112/MVA-Internet-use-and-bullying',
+    demo: 'https://timwei0801.github.io/MVA-Internet-use-and-bullying/',
+    stack: ['R', 'Python', 'scikit-learn', 'SHAP', 'Vue', 'GSAP'],
     viz: null,
     featured: false,
     span: 'full',
@@ -169,7 +168,7 @@ export const SKILL_GROUPS: readonly SkillGroup[] = [
     id: 'web',
     span: 2,
     icon: 'M3 12h18M12 3a15 15 0 010 18M12 3a15 15 0 000 18M3 12a9 9 0 1118 0 9 9 0 01-18 0z',
-    items: ['Vue', 'React', 'Next.js', 'three.js', 'FastAPI', 'Flask', 'PostgreSQL', 'AWS'],
+    items: ['Vue', 'React', 'Next.js', 'three.js', 'JSP', 'FastAPI', 'Flask', 'PostgreSQL', 'AWS'],
   },
   {
     id: 'methods',
@@ -180,6 +179,7 @@ export const SKILL_GROUPS: readonly SkillGroup[] = [
       'Heterogeneous Graph Transformer',
       'Stacking ensembles',
       'Generalized Additive Models',
+      'Multivariate analysis (PCA / FA / CCA)',
       'Anomaly detection (IF / HBOS / LOF)',
       'Fairness auditing',
     ],
@@ -194,18 +194,37 @@ export interface ExperienceEntry {
 
 export const EXPERIENCE: readonly ExperienceEntry[] = [
   { id: 'cathay', current: true },
-  { id: 'tku', current: true },
+  // Graduated — the timeline node is no longer the "current" accent colour.
+  { id: 'tku', current: false },
 ] as const
 
 export interface AwardEntry {
   /** i18n key under `awards.items`. */
-  id: 'highway' | 'conference' | 'hackathon'
-  icon: 'trophy' | 'mic' | 'flag'
+  id: 'highway' | 'mva' | 'hackathon'
+  icon: 'trophy' | 'flag' | 'poster'
   link: string | null
+  /** Columns out of 6 in the bento bed. Three entries tile across one row at span 2. */
+  span: 2 | 3
 }
 
+/** Chronological. */
 export const AWARDS: readonly AwardEntry[] = [
-  { id: 'highway', icon: 'trophy', link: 'https://github.com/tommy90112/Highway_trafficwave' },
-  { id: 'conference', icon: 'mic', link: 'https://github.com/tommy90112/Highway_trafficwave' },
-  { id: 'hackathon', icon: 'flag', link: 'https://github.com/tommy90112/Bito_AWS_Workshop' },
+  {
+    id: 'highway',
+    icon: 'trophy',
+    link: 'https://github.com/tommy90112/Highway_trafficwave',
+    span: 2,
+  },
+  {
+    id: 'mva',
+    icon: 'poster',
+    link: 'https://github.com/tommy90112/MVA-Internet-use-and-bullying',
+    span: 2,
+  },
+  {
+    id: 'hackathon',
+    icon: 'flag',
+    link: 'https://github.com/tommy90112/Bito_AWS_Workshop',
+    span: 2,
+  },
 ] as const

@@ -11,12 +11,12 @@ export default {
 
   hero: {
     tag: 'Causal Inference × Graph Machine Learning',
-    headline1: 'Models that explain',
-    headline2: 'why, not just',
-    headlineEm: 'what.',
+    headline1: 'Data science on',
+    headline2: 'graphs, with',
+    headlineEm: 'causal inference.',
     subline: 'MS Data Science, Tamkang University · Cathay Life Insurance · Taipei, Taiwan',
     description:
-      'I build machine learning systems on graph-structured data — and then I take them apart. My research traces a prediction back to the cause that actually produced it, by intervening on the graph rather than reading off correlations.',
+      'My thesis, CI-RCT, does causal root-cause tracing on graph neural networks. Alongside it I have worked on fraud detection, traffic forecasting, and health risk modelling.',
     ctaWork: 'See selected work',
     ctaContact: 'Get in touch',
     scroll: 'Scroll',
@@ -28,7 +28,6 @@ export default {
     thesis: { value: '0.95', label: 'AUC — thesis fraud detection' },
     records: { value: '770K+', label: 'transactions modelled' },
     award: { value: '2nd', label: 'national competition placing' },
-    talks: { value: '1', label: 'invited conference talk' },
   },
 
   about: {
@@ -51,21 +50,21 @@ export default {
   experience: {
     eyebrow: 'Experience',
     title: 'Where I have been working.',
-    note: 'Roles and dates to be confirmed — see the TODO in the source.',
+    note: 'Dates to be confirmed — see the TODO in the source.',
     items: {
       cathay: {
         org: 'Cathay Life Insurance Co., Ltd.',
-        role: 'Data Science',
+        role: 'Software Engineering Intern',
         period: 'Present',
         description:
-          'Applying statistical modelling and machine learning in an insurance data environment.',
+          'Building and maintaining internal systems against specifications written by business analysts — primarily Java, JSP, and Vue.',
       },
       tku: {
         org: 'Tamkang University — Department of Statistics',
         role: 'MS, Data Science Program',
-        period: 'Present',
+        period: 'Graduated',
         description:
-          'Master\'s research on causal intervention-based root cause tracing for heterogeneous graph neural networks (CI-RCT).',
+          'Master\'s research on causal intervention-based explainable root cause tracing for heterogeneous graph neural networks (CI-RCT).',
       },
     },
   },
@@ -76,6 +75,7 @@ export default {
     subtitle:
       'Each of these started from a question about how the data is connected — not from a model I wanted to try.',
     viewRepo: 'View repository',
+    viewDemo: 'Live demo',
     privateRepo: 'Private repository',
     thesisBadge: "Master's thesis",
     items: {
@@ -146,17 +146,17 @@ export default {
         metric3: 'React',
         metric3Label: 'interactive filtering',
       },
-      stock: {
-        name: 'Stock Recommendation System',
-        tagline: 'Industry-aware equity screening',
+      mva: {
+        name: 'Internet Use & Cyberbullying',
+        tagline: 'Multivariate analysis of the Taiwan Communication Survey',
         description:
-          'A Taiwan-market stock screening platform on a three-tier architecture. The premise is that one valuation formula cannot fairly score a bank and a semiconductor fab, so it applies separate evaluation logic per industry — financials, construction, shipping, semiconductors, electronic components, and ETFs.',
-        metric1: '6 industries',
-        metric1Label: 'separate valuation logic',
-        metric2: 'PostgreSQL',
-        metric2Label: 'data layer',
-        metric3: 'Flask',
-        metric3Label: 'application layer',
+          'An analysis of adult internet usage patterns and cyberbullying tendency using TCS 2021 survey data (672 valid responses, 68 variables). Generalized Association Plots separated five distinct user profiles; PCA and factor analysis reduced the construct space; canonical correlation linked usage behaviour to negative affect; and a classification model with SHAP attribution identified age as the dominant predictor at 39.7% importance.',
+        metric1: 'AUC 0.71',
+        metric1Label: 'high-risk classification',
+        metric2: '5 clusters',
+        metric2Label: 'GAP user profiles',
+        metric3: '672',
+        metric3Label: 'valid responses · 68 variables',
       },
     },
   },
@@ -177,15 +177,15 @@ export default {
     eyebrow: 'Awards & recognition',
     title: 'Selected recognition.',
     items: {
+      mva: {
+        title: 'Merit Award · Most Popular Poster Award',
+        org: 'Promenade of Data Science 2024, Institute of Statistical Science, Academia Sinica',
+        date: 'Dec 2024',
+      },
       highway: {
         title: '2nd Place (1st place vacant)',
         org: 'National Expressway Intelligent Traffic Competition',
-        date: 'Oct 2024',
-      },
-      conference: {
-        title: 'Invited Speaker',
-        org: '2025 Chinese Institute of Transportation Annual Conference',
-        date: 'Dec 2025',
+        date: 'Oct 2025',
       },
       hackathon: {
         title: 'Competing team — BitoPro Cryptocurrency Security track',

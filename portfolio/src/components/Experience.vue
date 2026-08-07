@@ -62,8 +62,8 @@ const { t } = useI18n()
       </ol>
 
       <!--
-        TODO: 補上完整經歷。目前只有 GitHub profile 上能確認的兩筆（國泰人壽、淡江統研），
-        缺實際職稱與起迄年月，也缺實習／助教等其他經歷。
+        TODO: 補上完整經歷。目前兩筆（國泰人壽、淡江統研）職稱已確認，仍缺起迄年月，
+        也缺助教等其他經歷。
         補法：在 src/data/site.ts 的 EXPERIENCE 加一筆 { id, current }，
         再到 src/i18n/en.ts 與 zh-TW.ts 的 experience.items 補對應文案。
       -->

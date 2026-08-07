@@ -1,4 +1,19 @@
-export default {
+import type en from './en'
+
+/**
+ * Same shape as `en`, but with every leaf free to hold its own string.
+ *
+ * This exists because `fallbackLocale: 'en'` silently papers over a missing
+ * translation — the page renders the English string instead of a visible
+ * `foo.bar` key, so neither the eye nor the "every visible string is
+ * translated" e2e check catches it. Annotating the file makes a dropped or
+ * misspelled key a compile error instead.
+ */
+type Messages<T> = {
+  [K in keyof T]: T[K] extends string ? string : Messages<T[K]>
+}
+
+const messages: Messages<typeof en> = {
   nav: {
     about: '關於',
     experience: '經歷',
@@ -11,12 +26,14 @@ export default {
 
   hero: {
     tag: '因果推論 × 圖機器學習',
-    headline1: '解釋模型',
-    headline2: '為什麼這樣判斷，',
-    headlineEm: '而不只是判斷了什麼。',
+    // 大標題不帶句末標點：全形標點固定佔一個字寬，在 100px 級距下
+    // 會在行末留下明顯空隙。換行本身已經是斷句。
+    headline1: '我做資料科學',
+    headline2: '在圖上做',
+    headlineEm: '因果推論',
     subline: '淡江大學統計系數據科學碩士班 · 國泰人壽 · 台北',
     description:
-      '我在圖結構資料上建立機器學習系統，然後把它拆開來看。我的研究以「干預」而非「相關」的方式，把一個預測結果追溯回真正造成它的原因。',
+      '碩士論文 CI-RCT 做的是圖神經網路上的因果根因追溯；此外也做過詐欺偵測、交通預測與健康風險建模。',
     ctaWork: '查看作品',
     ctaContact: '聯絡我',
     scroll: '向下捲動',
@@ -27,7 +44,6 @@ export default {
     thesis: { value: '0.95', label: '碩論詐欺偵測 AUC' },
     records: { value: '77 萬+', label: '筆交易紀錄建模' },
     award: { value: '第二名', label: '全國競賽名次' },
-    talks: { value: '1', label: '場學會受邀報告' },
   },
 
   about: {
@@ -50,19 +66,20 @@ export default {
   experience: {
     eyebrow: '經歷',
     title: '我待過的地方。',
-    note: '職稱與起迄時間待補——請見原始碼中的 TODO。',
+    note: '起迄年月待補——請見原始碼中的 TODO。',
     items: {
       cathay: {
         org: '國泰人壽保險股份有限公司',
-        role: '資料科學',
+        role: '程式設計實習生',
         period: '現職',
-        description: '在保險資料環境中應用統計建模與機器學習。',
+        description:
+          '依業務需求與系統分析師規格進行內部系統的程式設計與維運，技術棧以 Java、JSP 與 Vue 為主。',
       },
       tku: {
         org: '淡江大學 統計學系',
         role: '數據科學碩士班',
-        period: '在學中',
-        description: '碩士研究：基於因果干預之異質圖神經網路根因追溯（CI-RCT）。',
+        period: '畢業',
+        description: '碩士研究：基於因果干預之異質圖神經網路可解釋根因追溯（CI-RCT）。',
       },
     },
   },
@@ -72,6 +89,7 @@ export default {
     title: '六個專案，一條主線：結構重於規模。',
     subtitle: '這些專案都始於一個關於「資料是怎麼連起來的」的問題，而不是我想試某個模型。',
     viewRepo: '查看原始碼',
+    viewDemo: '線上展示',
     privateRepo: '私有專案庫',
     thesisBadge: '碩士論文',
     items: {
@@ -139,17 +157,17 @@ export default {
         metric3: 'React',
         metric3Label: '互動篩選',
       },
-      stock: {
-        name: '股票推薦系統',
-        tagline: '產業別選股平台',
+      mva: {
+        name: '網路使用行為與網路霸凌傾向',
+        tagline: '台灣傳播調查資料庫的多變量分析',
         description:
-          '採三層式架構的台股選股平台。前提是同一套估值公式無法公平地評分一家銀行與一座晶圓廠，因此針對金融、營建、航運、半導體、電子零組件與 ETF 各自套用不同的評估邏輯。',
-        metric1: '6 大產業',
-        metric1Label: '各自估值邏輯',
-        metric2: 'PostgreSQL',
-        metric2Label: '資料層',
-        metric3: 'Flask',
-        metric3Label: '應用層',
+          '以 TCS 2021 台灣傳播調查資料（672 份有效樣本、68 個變數）分析成人的網路使用型態與網路霸凌傾向。用 GAP 廣義關聯圖分出五種使用者輪廓，再以主成分與因素分析壓縮構面、典型相關分析連結使用行為與負面情緒，最後訓練分類模型並用 SHAP 拆解預測依據——年齡是最強的預測因子，重要性佔 39.7%。',
+        metric1: 'AUC 0.71',
+        metric1Label: '高風險傾向分類',
+        metric2: '5 群',
+        metric2Label: 'GAP 使用者輪廓',
+        metric3: '672',
+        metric3Label: '份有效樣本 · 68 變數',
       },
     },
   },
@@ -170,15 +188,15 @@ export default {
     eyebrow: '獎項與肯定',
     title: '精選紀錄。',
     items: {
+      mva: {
+        title: '優選獎 · 最佳人氣海報獎',
+        org: '2024 資料科學漫步（中央研究院統計科學研究所）',
+        date: '2024 年 12 月',
+      },
       highway: {
         title: '第二名（第一名從缺）',
         org: '全國高速公路智慧交通競賽',
-        date: '2024 年 10 月',
-      },
-      conference: {
-        title: '受邀報告',
-        org: '2025 中華民國運輸學會年會',
-        date: '2025 年 12 月',
+        date: '2025 年 10 月',
       },
       hackathon: {
         title: '參賽隊伍 — BitoPro 加密貨幣交易安全賽道',
@@ -210,4 +228,6 @@ export default {
     closeMenu: '關閉導覽選單',
     backToTop: '回到頂端',
   },
-} as const
+}
+
+export default messages

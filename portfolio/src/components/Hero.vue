@@ -46,9 +46,9 @@ function scrollTo(id: string): void {
             Chinese has no true italic; faux-oblique CJK reads as a rendering bug.
           -->
           <em
-            class="inline-block ml-[0.22em] text-gradient animate-fade-up
+            class="inline-block text-gradient animate-fade-up
                    bg-[linear-gradient(100deg,#B6A9FF,#7C6AFF_40%,#48D3E8)]"
-            :class="isZh ? 'not-italic' : ''"
+            :class="isZh ? 'not-italic' : 'ml-[0.22em]'"
             style="animation-delay: 380ms"
           >
             {{ t('hero.headlineEm') }}
@@ -88,7 +88,7 @@ function scrollTo(id: string): void {
         </div>
       </div>
 
-      <!-- Bento: signature visual beside a 2×2 stat block -->
+      <!-- Bento: signature visual beside a stacked stat block -->
       <div class="bento mt-20 md:mt-24 animate-fade-up" style="animation-delay: 760ms">
         <TiltedCard class="bento-wide p-5 md:p-8" :max-tilt="8" :depth="26">
           <CausalViz />
@@ -97,7 +97,7 @@ function scrollTo(id: string): void {
           </p>
         </TiltedCard>
 
-        <dl class="bento-narrow grid grid-cols-2 gap-4 md:gap-5 m-0">
+        <dl class="bento-narrow grid grid-cols-3 md:grid-cols-1 gap-3 md:gap-5 m-0">
           <SpotlightCard
             v-for="(stat, i) in HERO_STATS"
             :key="stat.key"

@@ -3,15 +3,20 @@ import { useI18n } from 'vue-i18n'
 import Reveal from '@/components/Reveal.vue'
 import SplitText from '@/components/fx/SplitText.vue'
 import SpotlightCard from '@/components/fx/SpotlightCard.vue'
-import { AWARDS } from '@/data/site'
+import { AWARDS, type AwardEntry } from '@/data/site'
 
 const { t } = useI18n()
 
-const ICON_PATHS: Record<string, string> = {
+const ICON_PATHS: Record<AwardEntry['icon'], string> = {
   trophy:
     'M8 21h8m-4-4v4m7-17H5v3a7 7 0 0014 0V4zM5 7H3.5A1.5 1.5 0 002 8.5v.5a4 4 0 004 4m13-5h1.5A1.5 1.5 0 0122 8.5v.5a4 4 0 01-4 4',
-  mic: 'M12 15a3 3 0 003-3V6a3 3 0 10-6 0v6a3 3 0 003 3zm7-3a7 7 0 01-14 0m7 7v3m-4 0h8',
   flag: 'M4 21V4m0 0h11l-1.5 3L15 10H4',
+  poster: 'M4 4h16v12H4zM8 20h8M12 16v4M7 8h6M7 12h4',
+}
+
+const SPAN_CLASS: Record<AwardEntry['span'], string> = {
+  2: 'bento-narrow',
+  3: 'bento-half',
 }
 </script>
 
@@ -29,7 +34,7 @@ const ICON_PATHS: Record<string, string> = {
       </h2>
 
       <ul class="bento list-none p-0 m-0">
-        <li v-for="(award, i) in AWARDS" :key="award.id" class="bento-narrow">
+        <li v-for="(award, i) in AWARDS" :key="award.id" :class="SPAN_CLASS[award.span]">
           <Reveal :delay="100 + i * 70" class="h-full">
             <SpotlightCard
               tilt

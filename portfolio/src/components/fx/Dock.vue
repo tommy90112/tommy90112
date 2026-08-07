@@ -1,123 +1,39 @@
 <script setup lang="ts">
 /**
- * Dock — macOS-style magnifying navigation bar.
+ * Dock — a row of glass bubbles for section navigation.
  *
- * Scale falls off as a Gaussian of the pointer's horizontal distance from each
- * item's centre, which is what gives the smooth "wave" instead of items
- * snapping between sizes. Item centres are measured once per pointer frame
- * from live rects, so the magnification stays correct while the row is itself
- * resizing under the effect.
- *
- * Keyboard users get a plain focusable button row with no magnification —
- * the effect is pointer-only decoration, never the affordance.
+ * Deliberately *not* the magnifying macOS dock: scaling each bubble as the
+ * pointer passes made neighbours overlap at the peak, and worse, it moved the
+ * target while the user was aiming at it. A navigation control should hold
+ * still. Feedback here is colour and border only, plus a label on hover/focus.
  */
-import { computed, onUnmounted, ref } from 'vue'
-import { usePrefersReducedMotion } from '@/composables/usePrefersReducedMotion'
 import type { DockItem } from '@/components/fx/types'
 
-const props = withDefaults(
-  defineProps<{
-    items: readonly DockItem[]
-    /** Peak extra scale directly under the pointer. */
-    amplitude?: number
-    /** px over which magnification falls off. */
-    spread?: number
-  }>(),
-  { amplitude: 0.55, spread: 88 },
-)
+defineProps<{ items: readonly DockItem[] }>()
 
 const emit = defineEmits<{ select: [id: string] }>()
-
-const prefersReduced = usePrefersReducedMotion()
-const listRef = ref<HTMLElement | null>(null)
-const scales = ref<number[]>([])
-
-let frameId = 0
-let pendingX: number | null = null
-
-const enabled = computed(
-  () =>
-    !prefersReduced.value &&
-    typeof window !== 'undefined' &&
-    window.matchMedia('(hover: hover) and (pointer: fine)').matches,
-)
-
-function scaleAt(index: number): number {
-  return scales.value[index] ?? 1
-}
-
-function itemStyle(index: number): Record<string, string> | undefined {
-  if (!enabled.value) return undefined
-  const scale = scaleAt(index)
-  return {
-    transform: `scale(${scale}) translateY(${-(scale - 1) * 12}px)`,
-  }
-}
-
-function applyPointer(): void {
-  frameId = 0
-  const x = pendingX
-  const list = listRef.value
-  pendingX = null
-  if (x === null || !list) return
-
-  const buttons = Array.from(list.querySelectorAll<HTMLElement>('[data-dock-item]'))
-  scales.value = buttons.map((button) => {
-    const rect = button.getBoundingClientRect()
-    const centre = rect.left + rect.width / 2
-    const distance = Math.abs(x - centre)
-    // Gaussian falloff — smooth, and reaches ~1 well before the row's edge.
-    return 1 + props.amplitude * Math.exp(-((distance / props.spread) ** 2))
-  })
-}
-
-function onPointerMove(event: PointerEvent): void {
-  if (!enabled.value) return
-  pendingX = event.clientX
-  if (frameId) return
-  frameId = requestAnimationFrame(applyPointer)
-}
-
-function onPointerLeave(): void {
-  if (frameId) {
-    cancelAnimationFrame(frameId)
-    frameId = 0
-  }
-  pendingX = null
-  scales.value = []
-}
-
-onUnmounted(() => {
-  if (frameId) cancelAnimationFrame(frameId)
-})
 </script>
 
 <template>
   <nav
     class="fixed inset-x-0 bottom-5 z-40 flex justify-center px-4 pointer-events-none"
-    :aria-label="'Section navigation'"
+    aria-label="Section navigation"
   >
     <ul
-      ref="listRef"
-      class="pointer-events-auto flex items-end gap-1 sm:gap-2 rounded-full px-3 py-2
-             bg-ink-900/70 border border-white/[0.10] backdrop-blur-2xl shadow-glass-lifted
+      class="pointer-events-auto flex items-center gap-1.5 sm:gap-2 rounded-full px-2.5 py-2
+             bg-ink-800/60 border border-white/[0.14] backdrop-blur-2xl shadow-glass-lifted
              list-none m-0"
-      @pointermove="onPointerMove"
-      @pointerleave="onPointerLeave"
     >
-      <li v-for="(item, i) in props.items" :key="item.id" class="relative">
+      <li v-for="item in items" :key="item.id" class="relative">
         <button
           type="button"
-          data-dock-item
-          class="group/dock relative grid place-items-center w-10 h-10 sm:w-11 sm:h-11 rounded-full
-                 border transition-[background-color,border-color,color,transform] duration-200
-                 origin-bottom will-change-transform"
+          class="group/dock relative grid place-items-center w-11 h-11 rounded-full border
+                 transition-colors duration-200"
           :class="
             item.active
-              ? 'bg-violet-500/20 border-violet-400/50 text-violet-200'
-              : 'bg-white/[0.04] border-white/[0.08] text-paper-400 hover:text-paper-100 hover:border-white/20'
+              ? 'bg-violet-500/25 border-violet-400/60 text-violet-200'
+              : 'bg-white/[0.06] border-white/[0.10] text-paper-300 hover:bg-white/[0.12] hover:border-white/25 hover:text-paper-50'
           "
-          :style="itemStyle(i)"
           :aria-label="item.label"
           :aria-current="item.active ? 'true' : undefined"
           @click="emit('select', item.id)"

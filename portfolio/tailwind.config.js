@@ -4,22 +4,28 @@ export default {
   theme: {
     extend: {
       colors: {
-        // "Causal Ink" palette — deep blue-black base
+        // "Causal Ink" palette — deep blue base.
+        // Lifted off near-black and pushed toward blue: the previous values sat
+        // close enough to #000 that translucent surfaces had nothing to lift
+        // away from, so every glass card read as flat dark grey.
         ink: {
-          950: '#070A12', // deepest bg
-          900: '#0B1019', // primary bg
-          800: '#111827', // surface
-          700: '#18202F', // raised surface
-          600: '#212B3D', // border
-          500: '#2E3A50', // strong border
+          950: '#0D1220', // deepest bg
+          900: '#141C31', // primary bg
+          800: '#1C2540', // surface
+          700: '#25304F', // raised surface
+          600: '#2F3C60', // border
+          500: '#3F4E76', // strong border
         },
+        // Foreground scale, lifted alongside `ink`. The muted end had to move
+        // most: against the brighter base, the old #56617A landed around 2.3:1,
+        // well under the 4.5:1 these 10–11px mono labels need.
         paper: {
           50: '#FFFFFF',
           100: '#EEF2F9', // primary fg
-          200: '#D6DEEC',
-          300: '#A9B4C9', // secondary fg
-          400: '#7A869E', // dimmed fg
-          500: '#56617A', // muted fg
+          200: '#D8DFEE',
+          300: '#BFC8DA', // secondary fg
+          400: '#A2AECA', // dimmed fg
+          500: '#8A97B5', // muted fg
         },
         // primary accent — the "intervention" colour
         violet: {
@@ -49,7 +55,7 @@ export default {
         mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       fontSize: {
-        'display-2xl': ['clamp(46px, 9vw, 124px)', { lineHeight: '0.96', letterSpacing: '-0.035em' }],
+        'display-2xl': ['clamp(42px, 7.6vw, 106px)', { lineHeight: '1.0', letterSpacing: '-0.03em' }],
         'display-xl': ['clamp(44px, 8vw, 108px)', { lineHeight: '1.02', letterSpacing: '-0.03em' }],
         'display-lg': ['clamp(36px, 6vw, 76px)', { lineHeight: '1.05', letterSpacing: '-0.025em' }],
         'display-md': ['clamp(30px, 4.5vw, 54px)', { lineHeight: '1.1', letterSpacing: '-0.02em' }],

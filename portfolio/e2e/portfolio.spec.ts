@@ -42,9 +42,11 @@ test('every visible string is translated', async ({ page }) => {
   const body = (await page.textContent('body')) ?? ''
   expect(body).not.toMatch(RAW_KEY_PATTERN)
 
-  // And again after switching locale.
+  // And again after switching locale. Asserted on script rather than on a
+  // specific string: what matters is that the toggle swapped the language,
+  // and pinning the headline copy makes every wording change a test failure.
   await page.locator('header button[aria-label]').first().click()
-  await expect(page.locator('h1')).toContainText('解釋模型')
+  await expect(page.locator('h1')).toHaveText(/[一-鿿]/)
 
   const zhBody = (await page.textContent('body')) ?? ''
   expect(zhBody).not.toMatch(RAW_KEY_PATTERN)

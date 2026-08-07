@@ -1,6 +1,7 @@
 <script setup lang="ts">
 /**
- * The repo link (or the "private" notice that replaces it) for a project card.
+ * Source and live-demo links for a project card — with the "private" notice
+ * standing in wherever there is no public repository.
  * Extracted so all three bento card layouts share one implementation.
  */
 import { useI18n } from 'vue-i18n'
@@ -26,7 +27,7 @@ const { t } = useI18n()
       </svg>
     </a>
 
-    <span v-else class="inline-flex items-center gap-2 font-mono text-xs text-paper-500">
+    <span v-if="!project.repo" class="inline-flex items-center gap-2 font-mono text-xs text-paper-500">
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <path
           stroke-linecap="round"
@@ -37,5 +38,19 @@ const { t } = useI18n()
       </svg>
       {{ t('projects.privateRepo') }}
     </span>
+    <a
+      v-if="project.demo"
+      :href="project.demo"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center gap-2 font-mono text-xs text-violet-300 link-underline
+             after:bg-violet-300"
+    >
+      {{ t('projects.viewDemo') }}
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7m0 0H8m9 0v9" />
+      </svg>
+    </a>
+
   </div>
 </template>
