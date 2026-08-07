@@ -1,7 +1,20 @@
 <script setup lang="ts">
+/**
+ * Project card, in three bento layouts driven by `span` + `viz`:
+ *
+ *  - `feature`  — full-row card with the visual beside the copy
+ *  - `stacked`  — half-row card with the visual above the copy
+ *  - `compact`  — no visual; copy only, laid out horizontally when full-row
+ *
+ * Which one applies is derived, not configured: a project with no visual can't
+ * be a feature card, and a half-row card is too narrow to sit a 400×300 chart
+ * next to text.
+ */
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { Project } from '@/data/site'
+import SpotlightCard from '@/components/fx/SpotlightCard.vue'
+import ProjectLinks from '@/components/ProjectLinks.vue'
 import AttributionViz from '@/components/viz/AttributionViz.vue'
 import NetworkViz from '@/components/viz/NetworkViz.vue'
 import ShockwaveViz from '@/components/viz/ShockwaveViz.vue'
@@ -13,20 +26,28 @@ const { t, te } = useI18n()
 
 const base = computed(() => `projects.items.${props.project.id}`)
 
+const VIZ_COMPONENTS = {
+  attribution: AttributionViz,
+  network: NetworkViz,
+  shockwave: ShockwaveViz,
+  roc: RocViz,
+} as const
+
 const vizComponent = computed(() => {
-  switch (props.project.viz) {
-    case 'attribution':
-      return AttributionViz
-    case 'network':
-      return NetworkViz
-    case 'shockwave':
-      return ShockwaveViz
-    case 'roc':
-      return RocViz
-    default:
-      return null
-  }
+  const kind = props.project.viz
+  if (!kind || !(kind in VIZ_COMPONENTS)) return null
+  return VIZ_COMPONENTS[kind as keyof typeof VIZ_COMPONENTS]
 })
+
+type Layout = 'feature' | 'stacked' | 'compact'
+
+const layout = computed<Layout>(() => {
+  if (!vizComponent.value) return 'compact'
+  return props.project.span === 'full' ? 'feature' : 'stacked'
+})
+
+/** Compact full-row cards read better as a horizontal strip than a tall block. */
+const isCompactRow = computed(() => layout.value === 'compact' && props.project.span === 'full')
 
 const captionKey = computed(() => `${base.value}.vizCaption`)
 const hasCaption = computed(() => te(captionKey.value))
@@ -38,20 +59,52 @@ const metrics = computed(() =>
   })),
 )
 
-/** Alternate which side the visual sits on, for projects that have one. */
-const isReversed = computed(() => props.index % 2 === 1)
+const accentRgb = computed(() => (props.project.featured ? '124, 106, 255' : '72, 211, 232'))
 </script>
 
 <template>
-  <article
-    class="card-hover overflow-hidden"
-    :class="project.featured ? 'border-violet-500/30' : ''"
+  <SpotlightCard
+    as="article"
+    tilt
+    :max-tilt="4"
+    :rgb="accentRgb"
+    :radius="460"
+    class="h-full"
+    :class="project.featured ? '!border-violet-500/25' : ''"
   >
-    <div class="grid lg:grid-cols-2 gap-0">
+    <div
+      class="h-full"
+      :class="{
+        'grid lg:grid-cols-2': layout === 'feature',
+        'flex flex-col': layout === 'stacked',
+        'flex flex-col lg:flex-row lg:items-center lg:gap-10 p-7 md:p-9': isCompactRow,
+        'flex flex-col p-7 md:p-9': layout === 'compact' && !isCompactRow,
+      }"
+    >
+      <!-- Visual (feature: right column, stacked: on top) -->
+      <div
+        v-if="vizComponent"
+        class="relative bg-white/[0.02]"
+        :class="
+          layout === 'feature'
+            ? 'order-last lg:order-none lg:col-start-2 p-7 md:p-9 border-t lg:border-t-0 lg:border-l border-white/[0.07] flex flex-col justify-center'
+            : 'p-6 md:p-7 border-b border-white/[0.07]'
+        "
+      >
+        <component :is="vizComponent" />
+        <p v-if="hasCaption" class="mt-4 font-mono text-[11px] leading-relaxed text-paper-500">
+          {{ t(captionKey) }}
+        </p>
+      </div>
+
       <!-- Copy -->
       <div
-        class="p-7 md:p-9 flex flex-col"
-        :class="vizComponent && isReversed ? 'lg:order-2' : ''"
+        class="flex flex-col"
+        :class="{
+          'p-7 md:p-9 lg:col-start-1 lg:row-start-1': layout === 'feature',
+          'p-7 md:p-8 flex-1': layout === 'stacked',
+          'lg:flex-1': isCompactRow,
+        }"
       >
         <div class="flex flex-wrap items-center gap-3 mb-4">
           <span class="font-mono text-[11px] text-paper-500 tabular-nums">
@@ -75,7 +128,10 @@ const isReversed = computed(() => props.index % 2 === 1)
         </p>
 
         <!-- Metrics -->
-        <dl class="grid grid-cols-3 gap-4 mb-7 m-0">
+        <dl
+          class="grid grid-cols-3 gap-4 mb-7 m-0"
+          :class="isCompactRow ? 'lg:hidden' : ''"
+        >
           <div v-for="metric in metrics" :key="metric.label">
             <dt class="sr-only">{{ metric.label }}</dt>
             <dd class="m-0">
@@ -92,45 +148,25 @@ const isReversed = computed(() => props.index % 2 === 1)
           <li v-for="tech in project.stack" :key="tech" class="chip">{{ tech }}</li>
         </ul>
 
-        <!-- Links -->
-        <div class="mt-auto flex flex-wrap items-center gap-5">
-          <a
-            v-if="project.repo"
-            :href="project.repo"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 font-mono text-xs text-paper-200 link-underline"
-          >
-            {{ t('projects.viewRepo') }}
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7m0 0H8m9 0v9" />
-            </svg>
-          </a>
-          <span v-else class="inline-flex items-center gap-2 font-mono text-xs text-paper-500">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
-            {{ t('projects.privateRepo') }}
-          </span>
-        </div>
+        <ProjectLinks :project="project" class="mt-auto" />
       </div>
 
-      <!-- Visual -->
-      <div
-        v-if="vizComponent"
-        class="p-7 md:p-9 bg-ink-950/60 border-t lg:border-t-0 border-ink-600 flex flex-col justify-center"
-        :class="isReversed ? 'lg:order-1 lg:border-r' : 'lg:border-l'"
+      <!-- Compact full-row cards move metrics into a side rail. -->
+      <dl
+        v-if="isCompactRow"
+        class="hidden lg:grid grid-cols-3 gap-6 lg:w-[38%] shrink-0 m-0
+               lg:border-l lg:border-white/[0.07] lg:pl-10"
       >
-        <component :is="vizComponent" />
-        <p v-if="hasCaption" class="mt-4 font-mono text-[11px] leading-relaxed text-paper-500">
-          {{ t(captionKey) }}
-        </p>
-      </div>
+        <div v-for="metric in metrics" :key="metric.label">
+          <dt class="sr-only">{{ metric.label }}</dt>
+          <dd class="m-0">
+            <span class="block h-display text-2xl text-paper-50">{{ metric.value }}</span>
+            <span class="block mt-1 font-mono text-[10px] leading-snug text-paper-500">
+              {{ metric.label }}
+            </span>
+          </dd>
+        </div>
+      </dl>
     </div>
-  </article>
+  </SpotlightCard>
 </template>

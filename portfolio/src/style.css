@@ -14,7 +14,7 @@
   }
 
   body {
-    @apply bg-ink-900 text-paper-200 font-sans antialiased;
+    @apply bg-ink-950 text-paper-200 font-sans antialiased;
   }
 
   /* Respect users who prefer reduced motion: kill every decorative animation. */
@@ -37,7 +37,7 @@
 
   /* Keyboard focus stays visible everywhere. */
   :focus-visible {
-    @apply outline-none ring-2 ring-violet-400 ring-offset-2 ring-offset-ink-900 rounded-sm;
+    @apply outline-none ring-2 ring-violet-400 ring-offset-2 ring-offset-ink-950 rounded-sm;
   }
 }
 
@@ -64,29 +64,51 @@
     @apply w-8 h-px bg-violet-400/60;
   }
 
+  /* Centred alternative to `.eyebrow`, which carries a leading rule that only
+     reads correctly in left-aligned blocks. */
+  .badge {
+    @apply inline-flex items-center gap-2.5 rounded-full px-4 py-1.5
+           bg-white/[0.05] border border-white/[0.10] backdrop-blur-xl
+           font-mono text-[11px] tracking-[0.16em] uppercase text-paper-300;
+  }
+
+  .badge-dot {
+    @apply w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse-soft;
+  }
+
   .btn {
     @apply inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-200;
   }
 
   .btn-primary {
-    @apply btn bg-violet-500 text-white hover:bg-violet-400 hover:-translate-y-0.5;
+    @apply btn bg-violet-500 text-white hover:bg-violet-400 hover:-translate-y-0.5
+           shadow-[0_10px_30px_-12px_rgba(124,106,255,0.9)];
   }
 
   .btn-ghost {
-    @apply btn border border-ink-500 text-paper-200 hover:border-violet-400 hover:text-paper-50;
+    @apply btn border border-white/10 bg-white/[0.03] text-paper-200 backdrop-blur-xl
+           hover:border-violet-400/50 hover:bg-white/[0.06] hover:text-paper-50;
   }
 
-  .card {
-    @apply bg-ink-800 border border-ink-600 rounded-2xl transition-colors duration-300;
+  /* ---- Glassmorphism surfaces -------------------------------------------
+     One shared recipe: translucent fill, hairline light border, backdrop
+     blur, and an inset top highlight that fakes a lit glass edge. */
+  .glass {
+    @apply bg-white/[0.05] border border-white/[0.11] backdrop-blur-2xl shadow-glass;
   }
 
-  .card-hover {
-    @apply card hover:border-violet-500/50;
+  .glass-card {
+    @apply glass rounded-bento transition-all duration-500;
+  }
+
+  .glass-hover {
+    @apply hover:border-white/[0.20] hover:bg-white/[0.075] hover:shadow-glass-lifted;
   }
 
   .chip {
-    @apply inline-flex items-center px-2.5 py-1 rounded-md bg-ink-700 border border-ink-600
-           font-mono text-[11px] text-paper-300;
+    @apply inline-flex items-center px-2.5 py-1 rounded-lg bg-white/[0.05] border border-white/[0.08]
+           font-mono text-[11px] text-paper-300 backdrop-blur-sm
+           transition-colors duration-200 hover:border-violet-400/40 hover:text-paper-100;
   }
 
   .link-underline {
@@ -95,14 +117,36 @@
            after:transition-[width] after:duration-300 hover:after:w-full;
   }
 
-  /* Faint blueprint grid used behind the hero. */
-  .grid-bg {
-    background-image:
-      linear-gradient(to right, rgba(46, 58, 80, 0.28) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(46, 58, 80, 0.28) 1px, transparent 1px);
-    background-size: 64px 64px;
-    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 78%);
-    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 78%);
+  /* ---- Bento grid --------------------------------------------------------
+     A 6-column bed on desktop; children opt into spans via .bento-* classes.
+     Collapses to a single column on mobile so nothing needs media queries at
+     the call site. */
+  .bento {
+    @apply grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-5 auto-rows-[minmax(0,auto)];
+  }
+
+  .bento-wide {
+    @apply md:col-span-4;
+  }
+
+  .bento-narrow {
+    @apply md:col-span-2;
+  }
+
+  .bento-half {
+    @apply md:col-span-3;
+  }
+
+  .bento-full {
+    @apply md:col-span-6;
+  }
+
+  /* Dot lattice — the quieter background used behind inner sections. */
+  .dot-bg {
+    background-image: radial-gradient(rgba(124, 106, 255, 0.18) 1px, transparent 1px);
+    background-size: 26px 26px;
+    mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, #000 10%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, #000 10%, transparent 75%);
   }
 }
 
@@ -112,6 +156,11 @@
   }
   .text-pretty {
     text-wrap: pretty;
+  }
+
+  /* Gradient-filled text. Pair with a `bg-gradient-*` utility. */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
   }
 
   /* Scroll-reveal: set by the useReveal composable. */

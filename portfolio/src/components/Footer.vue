@@ -7,7 +7,8 @@ const year = new Date().getFullYear()
 </script>
 
 <template>
-  <footer class="border-t border-ink-600 py-10">
+  <!-- Extra bottom padding clears the fixed Dock. -->
+  <footer class="border-t border-white/[0.06] pt-10 pb-28">
     <div
       class="container-x flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
     >

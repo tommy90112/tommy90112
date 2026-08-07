@@ -10,13 +10,41 @@ export const CONTACT = {
   repo: 'https://github.com/tommy90112/tommy90112',
 } as const
 
+/**
+ * Sections in reading order. `icon` is an SVG path `d` on a 24×24 stroked
+ * grid, used by the Dock; the text label always comes from `key`.
+ */
 export const NAV_SECTIONS = [
-  { id: 'about', key: 'nav.about' },
-  { id: 'experience', key: 'nav.experience' },
-  { id: 'work', key: 'nav.work' },
-  { id: 'skills', key: 'nav.skills' },
-  { id: 'awards', key: 'nav.awards' },
-  { id: 'contact', key: 'nav.contact' },
+  {
+    id: 'about',
+    key: 'nav.about',
+    icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM4 21v-1a6 6 0 0116 0v1',
+  },
+  {
+    id: 'experience',
+    key: 'nav.experience',
+    icon: 'M4 7h16v13H4zM9 7V5a2 2 0 012-2h2a2 2 0 012 2v2M4 12h16',
+  },
+  {
+    id: 'work',
+    key: 'nav.work',
+    icon: 'M4 5h7v7H4zM13 5h7v4h-7zM13 12h7v7h-7zM4 15h7v4H4z',
+  },
+  {
+    id: 'skills',
+    key: 'nav.skills',
+    icon: 'M9 18l-5-6 5-6M15 6l5 6-5 6',
+  },
+  {
+    id: 'awards',
+    key: 'nav.awards',
+    icon: 'M8 21h8m-4-4v4m7-17H5v3a7 7 0 0014 0V4z',
+  },
+  {
+    id: 'contact',
+    key: 'nav.contact',
+    icon: 'M3 6h18v12H3zM3 7l9 6 9-6',
+  },
 ] as const
 
 export const HERO_STATS = [
@@ -28,6 +56,12 @@ export const HERO_STATS = [
 
 export type VizKind = 'causal' | 'attribution' | 'network' | 'shockwave' | 'roc' | null
 
+/**
+ * Width of the card in the 6-column bento bed.
+ * `full` spans the row; `half` pairs two cards side by side.
+ */
+export type BentoSpan = 'full' | 'half'
+
 export interface Project {
   /** i18n key under `projects.items`. */
   id: string
@@ -38,6 +72,8 @@ export interface Project {
   viz: VizKind
   /** Thesis work gets a distinct badge and the leading slot. */
   featured: boolean
+  /** Bento footprint. Order + span together define the grid rhythm. */
+  span: BentoSpan
 }
 
 export const PROJECTS: readonly Project[] = [
@@ -48,6 +84,7 @@ export const PROJECTS: readonly Project[] = [
     stack: ['Python', 'PyTorch', 'PyTorch Geometric', 'NetworkX', 'SCM / do-calculus'],
     viz: 'attribution',
     featured: true,
+    span: 'full',
   },
   {
     id: 'bitoguard',
@@ -56,6 +93,7 @@ export const PROJECTS: readonly Project[] = [
     stack: ['Python', 'XGBoost', 'LightGBM', 'CatBoost', 'SHAP', 'React', 'TypeScript'],
     viz: 'network',
     featured: true,
+    span: 'half',
   },
   {
     id: 'highway',
@@ -64,6 +102,7 @@ export const PROJECTS: readonly Project[] = [
     stack: ['Python', 'TensorFlow', 'FastAPI', 'Next.js', 'TypeScript'],
     viz: 'shockwave',
     featured: false,
+    span: 'half',
   },
   {
     id: 'stroke',
@@ -72,6 +111,7 @@ export const PROJECTS: readonly Project[] = [
     stack: ['R', 'GAM', 'Random Forest', 'XGBoost'],
     viz: 'roc',
     featured: false,
+    span: 'half',
   },
   {
     id: 'cyberviz',
@@ -80,6 +120,7 @@ export const PROJECTS: readonly Project[] = [
     stack: ['JavaScript', 'three.js', 'React', 'Python'],
     viz: null,
     featured: false,
+    span: 'half',
   },
   {
     id: 'stock',
@@ -88,6 +129,7 @@ export const PROJECTS: readonly Project[] = [
     stack: ['Python', 'Flask', 'PostgreSQL', 'Jupyter'],
     viz: null,
     featured: false,
+    span: 'full',
   },
 ] as const
 
@@ -95,15 +137,23 @@ export interface SkillGroup {
   /** i18n key under `skills.groups`. */
   id: 'languages' | 'ml' | 'web' | 'methods'
   items: readonly string[]
+  /** Columns out of 6 in the bento bed — wider groups get more room. */
+  span: 2 | 3 | 4
+  /** SVG path `d` on a 24×24 stroked grid. */
+  icon: string
 }
 
 export const SKILL_GROUPS: readonly SkillGroup[] = [
   {
     id: 'languages',
+    span: 2,
+    icon: 'M9 18l-5-6 5-6M15 6l5 6-5 6',
     items: ['Python', 'R', 'SQL', 'TypeScript', 'JavaScript', 'Java'],
   },
   {
     id: 'ml',
+    span: 4,
+    icon: 'M12 3v4m0 10v4M3 12h4m10 0h4M6.3 6.3l2.9 2.9m5.6 5.6l2.9 2.9m0-11.4l-2.9 2.9m-5.6 5.6l-2.9 2.9',
     items: [
       'PyTorch',
       'PyTorch Geometric',
@@ -117,10 +167,14 @@ export const SKILL_GROUPS: readonly SkillGroup[] = [
   },
   {
     id: 'web',
+    span: 2,
+    icon: 'M3 12h18M12 3a15 15 0 010 18M12 3a15 15 0 000 18M3 12a9 9 0 1118 0 9 9 0 01-18 0z',
     items: ['Vue', 'React', 'Next.js', 'three.js', 'FastAPI', 'Flask', 'PostgreSQL', 'AWS'],
   },
   {
     id: 'methods',
+    span: 4,
+    icon: 'M5 19V5m0 14h14M9 15V9m4 6V6m4 9v-4',
     items: [
       'Causal inference (SCM / do-calculus)',
       'Heterogeneous Graph Transformer',

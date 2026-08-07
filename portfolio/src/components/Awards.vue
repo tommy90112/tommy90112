@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import Reveal from '@/components/Reveal.vue'
+import SplitText from '@/components/fx/SplitText.vue'
+import SpotlightCard from '@/components/fx/SpotlightCard.vue'
 import { AWARDS } from '@/data/site'
 
 const { t } = useI18n()
@@ -14,51 +16,70 @@ const ICON_PATHS: Record<string, string> = {
 </script>
 
 <template>
-  <section id="awards" class="section border-t border-ink-600">
-    <div class="container-x">
+  <section id="awards" class="section relative border-t border-white/[0.06]">
+    <div class="absolute inset-0 dot-bg opacity-30 pointer-events-none" aria-hidden="true"></div>
+
+    <div class="container-x relative">
       <Reveal>
         <p class="eyebrow mb-6">{{ t('awards.eyebrow') }}</p>
       </Reveal>
 
-      <Reveal :delay="60">
-        <h2 class="h-display text-display-md mb-12 text-balance">{{ t('awards.title') }}</h2>
-      </Reveal>
+      <h2 class="h-display text-display-md mb-12 text-balance">
+        <SplitText :text="t('awards.title')" />
+      </h2>
 
-      <ul class="list-none p-0 m-0 border-t border-ink-600">
-        <li v-for="(award, i) in AWARDS" :key="award.id">
-          <Reveal :delay="100 + i * 70">
-            <component
-              :is="award.link ? 'a' : 'div'"
-              :href="award.link ?? undefined"
-              :target="award.link ? '_blank' : undefined"
-              :rel="award.link ? 'noopener noreferrer' : undefined"
-              class="group flex items-start gap-5 py-7 border-b border-ink-600 no-underline
-                     transition-colors duration-300"
-              :class="award.link ? 'hover:bg-ink-800/50' : ''"
+      <ul class="bento list-none p-0 m-0">
+        <li v-for="(award, i) in AWARDS" :key="award.id" class="bento-narrow">
+          <Reveal :delay="100 + i * 70" class="h-full">
+            <SpotlightCard
+              tilt
+              :max-tilt="6"
+              rgb="245, 184, 65"
+              class="h-full"
+              :class="award.link ? '' : 'pointer-events-none'"
             >
-              <span
-                class="shrink-0 w-10 h-10 grid place-items-center rounded-full border border-ink-500
-                       text-amber-400 group-hover:border-amber-400/50 transition-colors"
-                aria-hidden="true"
+              <component
+                :is="award.link ? 'a' : 'div'"
+                :href="award.link ?? undefined"
+                :target="award.link ? '_blank' : undefined"
+                :rel="award.link ? 'noopener noreferrer' : undefined"
+                class="group/award flex h-full flex-col p-7 no-underline"
               >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" :d="ICON_PATHS[award.icon]" />
-                </svg>
-              </span>
+                <span
+                  class="mb-6 grid place-items-center w-11 h-11 rounded-2xl
+                         bg-amber-400/10 border border-amber-400/25 text-amber-300
+                         transition-colors duration-300 group-hover/award:bg-amber-400/20"
+                  aria-hidden="true"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" :d="ICON_PATHS[award.icon]" />
+                  </svg>
+                </span>
 
-              <div class="flex-1 min-w-0">
-                <h3 class="text-base md:text-lg text-paper-50 mb-1.5 text-pretty">
+                <span class="font-mono text-[11px] text-paper-500 mb-3 block">
+                  {{ t(`awards.items.${award.id}.date`) }}
+                </span>
+
+                <h3 class="text-base md:text-lg text-paper-50 mb-2 text-pretty">
                   {{ t(`awards.items.${award.id}.title`) }}
                 </h3>
-                <p class="text-sm text-paper-400 text-pretty">
+
+                <p class="text-sm text-paper-400 text-pretty mb-6">
                   {{ t(`awards.items.${award.id}.org`) }}
                 </p>
-              </div>
 
-              <span class="shrink-0 font-mono text-xs text-paper-500 pt-1">
-                {{ t(`awards.items.${award.id}.date`) }}
-              </span>
-            </component>
+                <span
+                  v-if="award.link"
+                  class="mt-auto inline-flex items-center gap-2 font-mono text-xs text-paper-400
+                         transition-colors group-hover/award:text-amber-300"
+                >
+                  {{ t('projects.viewRepo') }}
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7m0 0H8m9 0v9" />
+                  </svg>
+                </span>
+              </component>
+            </SpotlightCard>
           </Reveal>
         </li>
       </ul>
