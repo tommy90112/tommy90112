@@ -7,6 +7,7 @@ import About from '@/components/About.vue'
 import Experience from '@/components/Experience.vue'
 import Projects from '@/components/Projects.vue'
 import Skills from '@/components/Skills.vue'
+import Certifications from '@/components/Certifications.vue'
 import Awards from '@/components/Awards.vue'
 import Contact from '@/components/Contact.vue'
 import Footer from '@/components/Footer.vue'
@@ -15,16 +16,26 @@ import Dock from '@/components/fx/Dock.vue'
 import ClickSpark from '@/components/fx/ClickSpark.vue'
 import PageBackdrop from '@/components/fx/PageBackdrop.vue'
 import type { DockItem } from '@/components/fx/types'
-import { NAV_SECTIONS } from '@/data/site'
+import { CERTIFICATIONS, NAV_SECTIONS } from '@/data/site'
 import { useActiveSection } from '@/composables/useActiveSection'
 
 const { t } = useI18n()
 
-const sectionIds = NAV_SECTIONS.map((section) => section.id)
+/**
+ * Some sections only render once they have content. Navigation is derived
+ * from the same condition, so the Dock never offers a target that isn't on
+ * the page.
+ */
+const RENDERED_WHEN: Record<string, boolean> = {
+  certifications: CERTIFICATIONS.length > 0,
+}
+
+const visibleSections = NAV_SECTIONS.filter((section) => RENDERED_WHEN[section.id] ?? true)
+const sectionIds = visibleSections.map((section) => section.id)
 const activeSection = useActiveSection(sectionIds)
 
 const dockItems = computed<DockItem[]>(() =>
-  NAV_SECTIONS.map((section) => ({
+  visibleSections.map((section) => ({
     id: section.id,
     label: t(section.key),
     icon: section.icon,
@@ -56,6 +67,7 @@ function scrollToSection(id: string): void {
     <Experience />
     <Projects />
     <Skills />
+    <Certifications />
     <Awards />
     <Contact />
   </main>

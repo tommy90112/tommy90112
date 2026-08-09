@@ -19,6 +19,7 @@ const messages: Messages<typeof en> = {
     experience: '經歷',
     work: '作品',
     skills: '技能',
+    certifications: '證照',
     awards: '獎項',
     contact: '聯絡',
     resumeCta: '聯絡我',
@@ -181,6 +182,40 @@ const messages: Messages<typeof en> = {
       ml: '機器學習與統計',
       web: '網頁與基礎設施',
       methods: '方法論',
+    },
+  },
+
+  certifications: {
+    eyebrow: '證照',
+    title: '證照與檢定。',
+    subtitle: '有正式證書可查的部分。',
+    verify: '驗證',
+    items: {
+      az900: {
+        name: 'Microsoft Certified: Azure Fundamentals (AZ-900)',
+        issuer: 'Microsoft',
+        date: '2026 年 5 月',
+      },
+      ai900: {
+        name: 'Microsoft Certified: Azure AI Fundamentals (AI-900)',
+        issuer: 'Microsoft',
+        date: '2026 年 5 月',
+      },
+      sas1: {
+        name: 'SAS Programming 1: Essentials',
+        issuer: 'SAS',
+        date: '2023 年 11 月',
+      },
+      sas2: {
+        name: 'SAS Programming 2: Data Manipulation Techniques',
+        issuer: 'SAS',
+        date: '2023 年 11 月',
+      },
+      itsAi: {
+        name: 'IT Specialist - Artificial Intelligence',
+        issuer: 'Certiport, a Pearson VUE business',
+        date: '2023 年 10 月',
+      },
     },
   },
 

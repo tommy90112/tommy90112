@@ -4,6 +4,7 @@ export default {
     experience: 'Experience',
     work: 'Work',
     skills: 'Skills',
+    certifications: 'Certifications',
     awards: 'Awards',
     contact: 'Contact',
     resumeCta: 'Get in touch',
@@ -170,6 +171,40 @@ export default {
       ml: 'Machine Learning & Statistics',
       web: 'Web & Infrastructure',
       methods: 'Methods',
+    },
+  },
+
+  certifications: {
+    eyebrow: 'Certifications',
+    title: 'Credentials.',
+    subtitle: 'The ones backed by a certificate you can check.',
+    verify: 'Verify',
+    items: {
+      az900: {
+        name: 'Microsoft Certified: Azure Fundamentals (AZ-900)',
+        issuer: 'Microsoft',
+        date: 'May 2026',
+      },
+      ai900: {
+        name: 'Microsoft Certified: Azure AI Fundamentals (AI-900)',
+        issuer: 'Microsoft',
+        date: 'May 2026',
+      },
+      sas1: {
+        name: 'SAS Programming 1: Essentials',
+        issuer: 'SAS',
+        date: 'Nov 2023',
+      },
+      sas2: {
+        name: 'SAS Programming 2: Data Manipulation Techniques',
+        issuer: 'SAS',
+        date: 'Nov 2023',
+      },
+      itsAi: {
+        name: 'IT Specialist - Artificial Intelligence',
+        issuer: 'Certiport, a Pearson VUE business',
+        date: 'Oct 2023',
+      },
     },
   },
 

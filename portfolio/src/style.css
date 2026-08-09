@@ -77,11 +77,12 @@
   }
 
   .btn {
-    @apply inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-200;
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium
+           transition-colors duration-200;
   }
 
   .btn-primary {
-    @apply btn bg-violet-500 text-white hover:bg-violet-400 hover:-translate-y-0.5
+    @apply btn bg-violet-500 text-white hover:bg-violet-400
            shadow-[0_10px_30px_-12px_rgba(124,106,255,0.9)];
   }
 

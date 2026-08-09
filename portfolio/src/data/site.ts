@@ -36,6 +36,11 @@ export const NAV_SECTIONS = [
     icon: 'M9 18l-5-6 5-6M15 6l5 6-5 6',
   },
   {
+    id: 'certifications',
+    key: 'nav.certifications',
+    icon: 'M9 12l2 2 4-4M12 3l7 4v5c0 4.4-3 8.4-7 9.5C8 20.4 5 16.4 5 12V7l7-4z',
+  },
+  {
     id: 'awards',
     key: 'nav.awards',
     icon: 'M8 21h8m-4-4v4m7-17H5v3a7 7 0 0014 0V4z',
@@ -186,6 +191,65 @@ export const SKILL_GROUPS: readonly SkillGroup[] = [
   },
 ] as const
 
+export interface CertificationEntry {
+  /** i18n key under `certifications.items` — holds `name` / `issuer` / `date`. */
+  id: string
+  /** Verification / credential URL, when the issuer provides one. */
+  link: string | null
+  /**
+   * Badge artwork, as a path under `public/` (e.g. `badges/az-900.png`).
+   * Self-hosted rather than hot-linked from images.credly.com: an external
+   * image makes every visitor's browser announce itself to Credly, and a
+   * third-party outage would leave holes in the section. `null` falls back
+   * to a generic shield icon.
+   */
+  badge: string | null
+}
+
+/**
+ * Certifications, most recent first — with the two SAS courses kept in
+ * sequence, since reversing a numbered series reads as a mistake.
+ *
+ * `link` points at the Credly public badge page, which shows the credential
+ * issued to a named earner and verifiable against the issuer. That is what
+ * separates a badge from a screenshot anyone could copy, so it is worth
+ * keeping populated. UUIDs come from the earner's public badge feed:
+ * https://www.credly.com/users/yuhung-shih.e36abb06/badges.json
+ *
+ * To add one:
+ *   1. push an entry here;
+ *   2. add `certifications.items.<id>` with `name` / `issuer` / `date` to
+ *      BOTH `src/i18n/en.ts` and `src/i18n/zh-TW.ts` — the zh-TW file is
+ *      type-checked against en, so a missing key fails the build.
+ */
+export const CERTIFICATIONS: readonly CertificationEntry[] = [
+  {
+    id: 'az900',
+    link: 'https://www.credly.com/badges/de9bfa37-4f9a-4f12-bbe7-a5a6f23a7902/public_url',
+    badge: 'badges/azure_az-900.png',
+  },
+  {
+    id: 'ai900',
+    link: 'https://www.credly.com/badges/1461cf20-00d2-4404-9b1e-64cee63b51d7/public_url',
+    badge: 'badges/azure_ai-900.png',
+  },
+  {
+    id: 'sas1',
+    link: 'https://www.credly.com/badges/faf3af9a-5e0c-4849-8a2a-4755f5897109/public_url',
+    badge: 'badges/SAS_programming_1.png',
+  },
+  {
+    id: 'sas2',
+    link: 'https://www.credly.com/badges/fd0cc39b-61d8-486f-9025-6421763f38e8/public_url',
+    badge: 'badges/SAS_programming_2.png',
+  },
+  {
+    id: 'itsAi',
+    link: 'https://www.credly.com/badges/d0275143-3966-4f13-9ea9-9f4e7c997c0b/public_url',
+    badge: 'badges/ITS-Badges_ai.png',
+  },
+]
+
 export interface ExperienceEntry {
   /** i18n key under `experience.items`. */
   id: 'cathay' | 'tku'
@@ -207,8 +271,14 @@ export interface AwardEntry {
   span: 2 | 3
 }
 
-/** Chronological. */
+/** Most recent first. */
 export const AWARDS: readonly AwardEntry[] = [
+  {
+    id: 'hackathon',
+    icon: 'flag',
+    link: 'https://github.com/tommy90112/Bito_AWS_Workshop',
+    span: 2,
+  },
   {
     id: 'highway',
     icon: 'trophy',
@@ -219,12 +289,6 @@ export const AWARDS: readonly AwardEntry[] = [
     id: 'mva',
     icon: 'poster',
     link: 'https://github.com/tommy90112/MVA-Internet-use-and-bullying',
-    span: 2,
-  },
-  {
-    id: 'hackathon',
-    icon: 'flag',
-    link: 'https://github.com/tommy90112/Bito_AWS_Workshop',
     span: 2,
   },
 ] as const
