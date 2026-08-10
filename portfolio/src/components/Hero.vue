@@ -95,11 +95,28 @@ function scrollTo(id: string): void {
           </div>
         </div>
 
-        <!-- Dateline rail — the metadata a paper hangs under its title block. -->
+        <!-- Dateline rail — the metadata a paper hangs under its title block.
+             Availability leads it: this portfolio exists to find a role, so the
+             status belongs above the fold rather than inferred from a date. -->
         <aside
           class="col-rail md:pl-8 md:border-l md:border-line animate-fade-up"
           style="animation-delay: 700ms"
         >
+          <p
+            class="inline-flex items-center gap-2 m-0 mb-4 px-3 py-1.5 rounded-full
+                   border border-accent/35 bg-accent/10 font-mono text-[11px] text-accent"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse-soft shrink-0"
+              aria-hidden="true"
+            ></span>
+            {{ t('availability.status') }}
+          </p>
+
+          <p class="font-mono text-[11px] leading-relaxed text-fg-muted m-0 mb-3">
+            {{ t('availability.detail') }}
+          </p>
+
           <p class="font-mono text-[11px] leading-relaxed text-fg-faint m-0">
             {{ t('hero.subline') }}
           </p>

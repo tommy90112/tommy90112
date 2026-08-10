@@ -10,7 +10,7 @@ const SECTION_IDS = ['top', 'about', 'experience', 'work', 'skills', 'awards', '
 
 /** Untranslated keys leak into the DOM as their raw dot-path. */
 const RAW_KEY_PATTERN =
-  /\b(?:nav|hero|about|projects|skills|certifications|awards|contact|footer|stats|experience|theme|a11y)\.[a-zA-Z0-9.]+/
+  /\b(?:nav|hero|availability|about|projects|skills|certifications|awards|contact|footer|stats|experience|theme|a11y)\.[a-zA-Z0-9.]+/
 
 function collectPageProblems(page: Page): string[] {
   const problems: string[] = []
@@ -54,6 +54,17 @@ test('every visible string is translated', async ({ page }) => {
 
   const zhBody = (await page.textContent('body')) ?? ''
   expect(zhBody).not.toMatch(RAW_KEY_PATTERN)
+})
+
+test('states availability above the fold, in both locales', async ({ page }) => {
+  await page.goto('/')
+
+  // The site's purpose is a job search: losing this status is a silent
+  // regression that nothing else in the suite would notice.
+  await expect(page.getByText('Open to work').first()).toBeVisible()
+
+  await page.getByTestId('locale-toggle').click()
+  await expect(page.getByText('開放新機會').first()).toBeVisible()
 })
 
 test('page never scrolls horizontally', async ({ page }) => {

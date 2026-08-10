@@ -46,6 +46,16 @@ const focusKeys = ['about.focus1', 'about.focus2', 'about.focus3', 'about.focus4
             -->
             <dl class="m-0 divide-y divide-line">
               <div class="pb-4">
+                <dt class="sr-only">Availability</dt>
+                <dd class="m-0 flex items-center gap-2 text-accent">
+                  <span
+                    class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse-soft shrink-0"
+                    aria-hidden="true"
+                  ></span>
+                  <span class="font-mono text-[11px]">{{ t('availability.status') }}</span>
+                </dd>
+              </div>
+              <div class="py-4">
                 <dt class="sr-only">Education</dt>
                 <dd class="text-fg m-0">{{ t('about.factsEducation') }}</dd>
               </div>

@@ -41,6 +41,11 @@ const messages: Messages<typeof en> = {
     vizCaption: '對候選原因進行干預，量測下游預測如何改變。',
   },
 
+  availability: {
+    status: '開放新機會',
+    detail: '正在尋找資料科學／機器學習相關職缺——台北或遠端皆可。',
+  },
+
   stats: {
     thesis: { value: '0.95', label: '碩論詐欺偵測 AUC' },
     records: { value: '77 萬+', label: '筆交易紀錄建模' },
@@ -67,7 +72,7 @@ const messages: Messages<typeof en> = {
   experience: {
     eyebrow: '經歷',
     title: '我待過的地方。',
-    currentLabel: '目前在職',
+    ongoingLabel: '進行中',
     items: {
       cathay: {
         org: '國泰人壽保險股份有限公司',

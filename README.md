@@ -22,6 +22,9 @@
 
 ## About
 
+> 🟢 **Open to work** — looking for data science and machine learning roles, Taipei or remote.
+> Reach me at [tommy90112@gmail.com](mailto:tommy90112@gmail.com).
+
 I work at the intersection of **statistics, causal inference, and graph machine learning**. My research asks a question most GNN explainers skip: when a model flags a node as fraudulent, *which upstream cause actually drove that decision* — and can we prove it by intervening rather than by correlating?
 
 - 🎓 **MS, Data Science — Department of Statistics and Data Science, Tamkang University** (2026)

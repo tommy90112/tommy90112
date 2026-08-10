@@ -29,7 +29,7 @@ const { t } = useI18n()
                 <span
                   v-if="entry.current"
                   class="mt-[7px] w-1.5 h-1.5 rounded-full bg-accent shrink-0 animate-pulse-soft"
-                  :aria-label="t('experience.currentLabel')"
+                  :aria-label="t('experience.ongoingLabel')"
                 ></span>
                 <span
                   v-else

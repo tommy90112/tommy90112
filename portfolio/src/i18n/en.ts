@@ -25,6 +25,15 @@ export default {
       'Intervening on a candidate cause and measuring how the downstream prediction shifts.',
   },
 
+  /**
+   * Job-search status. This portfolio exists to find a role, so the state is
+   * surfaced rather than left to be inferred from an empty end-date.
+   */
+  availability: {
+    status: 'Open to work',
+    detail: 'Looking for data science and machine learning roles — Taipei or remote.',
+  },
+
   stats: {
     thesis: { value: '0.95', label: 'AUC — thesis fraud detection' },
     records: { value: '770K+', label: 'transactions modelled' },
@@ -52,7 +61,7 @@ export default {
   experience: {
     eyebrow: 'Experience',
     title: 'Where I have been working.',
-    currentLabel: 'Current position',
+    ongoingLabel: 'Ongoing',
     items: {
       cathay: {
         org: 'Cathay Life Insurance Co., Ltd.',
