@@ -61,6 +61,7 @@ function scrollToTop(): void {
 
         <button
           type="button"
+          data-testid="locale-toggle"
           class="h-9 px-3 rounded-inner border border-line font-mono text-[10.5px]
                  uppercase tracking-[0.14em] text-fg-muted transition-colors duration-200
                  hover:border-line-strong hover:text-fg"

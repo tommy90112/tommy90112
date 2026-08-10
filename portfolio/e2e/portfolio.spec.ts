@@ -10,7 +10,7 @@ const SECTION_IDS = ['top', 'about', 'experience', 'work', 'skills', 'awards', '
 
 /** Untranslated keys leak into the DOM as their raw dot-path. */
 const RAW_KEY_PATTERN =
-  /\b(?:nav|hero|about|projects|skills|awards|contact|footer|stats|experience|a11y)\.[a-zA-Z0-9.]+/
+  /\b(?:nav|hero|about|projects|skills|certifications|awards|contact|footer|stats|experience|theme|a11y)\.[a-zA-Z0-9.]+/
 
 function collectPageProblems(page: Page): string[] {
   const problems: string[] = []
@@ -45,7 +45,11 @@ test('every visible string is translated', async ({ page }) => {
   // And again after switching locale. Asserted on script rather than on a
   // specific string: what matters is that the toggle swapped the language,
   // and pinning the headline copy makes every wording change a test failure.
-  await page.locator('header button[aria-label]').first().click()
+  //
+  // Addressed by test id, not by position: this used to take the first
+  // `button[aria-label]` in the header, so adding the theme control ahead of it
+  // silently retargeted the click and the locale never changed.
+  await page.getByTestId('locale-toggle').click()
   await expect(page.locator('h1')).toHaveText(/[一-鿿]/)
 
   const zhBody = (await page.textContent('body')) ?? ''
