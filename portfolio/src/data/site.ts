@@ -257,8 +257,10 @@ export interface ExperienceEntry {
 }
 
 export const EXPERIENCE: readonly ExperienceEntry[] = [
-  { id: 'cathay', current: true },
-  // Graduated — the timeline node is no longer the "current" accent colour.
+  // The internship ended in June 2026; neither entry is ongoing, so no timeline
+  // node carries the "current" accent. The `current: true` branch in
+  // Experience.vue stays for whenever a new role starts.
+  { id: 'cathay', current: false },
   { id: 'tku', current: false },
 ] as const
 

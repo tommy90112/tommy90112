@@ -15,7 +15,7 @@ export default {
     headline1: 'Data science on',
     headline2: 'graphs, with',
     headlineEm: 'causal inference.',
-    subline: 'MS Data Science, Tamkang University · Cathay Life Insurance · Taipei, Taiwan',
+    subline: 'MS Data Science, Tamkang University · Taipei, Taiwan',
     description:
       'My thesis, CI-RCT, does causal root-cause tracing on graph neural networks. Alongside it I have worked on fraud detection, traffic forecasting, and health risk modelling.',
     ctaWork: 'See selected work',
@@ -42,27 +42,27 @@ export default {
     focus2: 'Fraud, anomaly, and risk detection at scale',
     focus3: 'Explainability and fairness auditing of deployed models',
     focus4: 'Turning research output into something a person can actually use',
-    currentTitle: 'Right now',
-    currentRole: 'Cathay Life Insurance Co., Ltd.',
-    currentStudy: 'MS, Data Science Program — Department of Statistics, Tamkang University',
-    currentLocation: 'Taipei, Taiwan',
+    factsTitle: 'At a glance',
+    factsEducation:
+      'MS, Data Science — Department of Statistics and Data Science, Tamkang University (2026)',
+    factsLatest: 'Programming Intern, Cathay Life Insurance (Jun 2025 – Jun 2026)',
+    factsLocation: 'Taipei, Taiwan',
   },
 
   experience: {
     eyebrow: 'Experience',
     title: 'Where I have been working.',
-    note: 'Dates to be confirmed — see the TODO in the source.',
     currentLabel: 'Current position',
     items: {
       cathay: {
         org: 'Cathay Life Insurance Co., Ltd.',
-        role: 'Software Engineering Intern',
-        period: 'Present',
+        role: 'Programming Intern',
+        period: 'Jun 2025 – Jun 2026 · 1 yr 1 mo',
         description:
-          'Building and maintaining internal systems against specifications written by business analysts — primarily Java, JSP, and Vue.',
+          'Built and maintained internal systems against specifications written by business analysts — primarily Java, JSP, Spring Boot, and Vue.',
       },
       tku: {
-        org: 'Tamkang University — Department of Statistics',
+        org: 'Tamkang University — Department of Statistics and Data Science',
         role: 'MS, Data Science Program',
         period: 'Graduated',
         description:

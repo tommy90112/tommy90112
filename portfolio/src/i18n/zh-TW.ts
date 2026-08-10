@@ -32,7 +32,7 @@ const messages: Messages<typeof en> = {
     headline1: '我做資料科學',
     headline2: '在圖上做',
     headlineEm: '因果推論',
-    subline: '淡江大學統計系數據科學碩士班 · 國泰人壽 · 台北',
+    subline: '淡江大學統計與資料科學學系 數據科學碩士 · 台北',
     description:
       '碩士論文 CI-RCT 做的是圖神經網路上的因果根因追溯；此外也做過詐欺偵測、交通預測與健康風險建模。',
     ctaWork: '查看作品',
@@ -58,27 +58,26 @@ const messages: Messages<typeof en> = {
     focus2: '大規模詐欺、異常與風險偵測',
     focus3: '已部署模型的可解釋性與公平性稽核',
     focus4: '把研究成果變成人真的能用的東西',
-    currentTitle: '目前',
-    currentRole: '國泰人壽保險股份有限公司',
-    currentStudy: '淡江大學統計學系 數據科學碩士班',
-    currentLocation: '台北，台灣',
+    factsTitle: '簡歷',
+    factsEducation: '淡江大學統計與資料科學學系 數據科學碩士（2026 畢業）',
+    factsLatest: '國泰人壽 程式設計實習生（2025/06 – 2026/06）',
+    factsLocation: '台北，台灣',
   },
 
   experience: {
     eyebrow: '經歷',
     title: '我待過的地方。',
-    note: '起迄年月待補——請見原始碼中的 TODO。',
     currentLabel: '目前在職',
     items: {
       cathay: {
         org: '國泰人壽保險股份有限公司',
         role: '程式設計實習生',
-        period: '現職',
+        period: '2025/06 - 2026/06, 1年1個月',
         description:
-          '依業務需求與系統分析師規格進行內部系統的程式設計與維運，技術棧以 Java、JSP 與 Vue 為主。',
+          '依業務需求與系統分析師規格進行內部系統的程式設計與維運，技術以 Java、JSP、SpringBoot 與 Vue 為主。',
       },
       tku: {
-        org: '淡江大學 統計學系',
+        org: '淡江大學 統計與資料科學學系',
         role: '數據科學碩士班',
         period: '畢業',
         description: '碩士研究：基於因果干預之異質圖神經網路可解釋根因追溯（CI-RCT）。',

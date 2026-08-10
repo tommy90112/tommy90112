@@ -37,20 +37,25 @@ const focusKeys = ['about.focus1', 'about.focus2', 'about.focus3', 'about.focus4
         <Reveal :delay="140" class="col-minor md:col-start-8">
           <div class="panel p-6 md:p-7">
             <h3 class="font-mono text-[10.5px] uppercase tracking-[0.18em] text-accent m-0 mb-5">
-              {{ t('about.currentTitle') }}
+              {{ t('about.factsTitle') }}
             </h3>
+            <!--
+              Education leads because it is the completed credential; the
+              internship is listed as the most recent role, with its dates, so
+              the card never implies an ongoing position.
+            -->
             <dl class="m-0 divide-y divide-line">
               <div class="pb-4">
-                <dt class="sr-only">Employer</dt>
-                <dd class="text-fg m-0">{{ t('about.currentRole') }}</dd>
+                <dt class="sr-only">Education</dt>
+                <dd class="text-fg m-0">{{ t('about.factsEducation') }}</dd>
               </div>
               <div class="py-4">
-                <dt class="sr-only">Study</dt>
-                <dd class="text-sm text-fg-muted m-0">{{ t('about.currentStudy') }}</dd>
+                <dt class="sr-only">Most recent role</dt>
+                <dd class="text-sm text-fg-muted m-0">{{ t('about.factsLatest') }}</dd>
               </div>
               <div class="pt-4">
                 <dt class="sr-only">Location</dt>
-                <dd class="font-mono text-[11px] text-fg-faint m-0">{{ t('about.currentLocation') }}</dd>
+                <dd class="font-mono text-[11px] text-fg-faint m-0">{{ t('about.factsLocation') }}</dd>
               </div>
             </dl>
           </div>

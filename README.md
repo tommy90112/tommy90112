@@ -24,8 +24,8 @@
 
 I work at the intersection of **statistics, causal inference, and graph machine learning**. My research asks a question most GNN explainers skip: when a model flags a node as fraudulent, *which upstream cause actually drove that decision* — and can we prove it by intervening rather than by correlating?
 
-- 🏢 Currently at **Cathay Life Insurance Co., Ltd.**
-- 🎓 **MS, Data Science Program, Department of Statistics — Tamkang University**
+- 🎓 **MS, Data Science — Department of Statistics and Data Science, Tamkang University** (2026)
+- 🏢 Most recently **Programming Intern at Cathay Life Insurance** (Jun 2025 – Jun 2026)
 - 🔬 Focus: causal root-cause tracing on heterogeneous graphs, fraud & anomaly detection, explainable AI
 - 📍 Taipei, Taiwan
 
