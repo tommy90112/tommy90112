@@ -13,6 +13,7 @@
  */
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { VIZ } from '@/components/viz/palette'
 
 const { locale } = useI18n()
 const isZh = computed(() => locale.value.startsWith('zh'))
@@ -68,8 +69,8 @@ const BAR_W = 210
         class="px-3 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-wider transition-colors"
         :class="
           mode === option
-            ? 'bg-violet-500/15 text-violet-300 border border-violet-500/40'
-            : 'text-paper-500 border border-transparent hover:text-paper-300'
+            ? 'bg-accent/15 text-accent-soft border border-accent/40'
+            : 'text-fg-faint border border-transparent hover:text-fg-muted'
         "
         :aria-pressed="mode === option"
         @click="mode = option"
@@ -106,14 +107,14 @@ const BAR_W = 210
             :x="BAR_X - 12"
             y="18"
             text-anchor="end"
-            class="font-mono fill-paper-300"
+            class="font-mono fill-fg-muted"
             font-size="10"
           >
             {{ labelOf(cause) }}
           </text>
 
           <!-- Track -->
-          <rect :x="BAR_X" y="8" :width="BAR_W" height="12" rx="6" fill="#18202F" />
+          <rect :x="BAR_X" y="8" :width="BAR_W" height="12" rx="6" :style="{ fill: VIZ.track }" />
           <!-- Value -->
           <rect
             :x="BAR_X"
@@ -121,14 +122,16 @@ const BAR_W = 210
             :width="BAR_W * valueOf(cause)"
             height="12"
             rx="6"
-            :fill="mode === 'causal' ? '#7C6AFF' : '#2E3A50'"
-            style="transition: width 520ms cubic-bezier(0.22, 1, 0.36, 1), fill 300ms"
+            :style="{
+              fill: mode === 'causal' ? VIZ.accent : VIZ.axis,
+              transition: 'width 520ms cubic-bezier(0.22, 1, 0.36, 1), fill 300ms',
+            }"
           />
 
           <text
             :x="BAR_X + BAR_W + 10"
             y="18"
-            class="font-mono fill-paper-500 tabular-nums"
+            class="font-mono fill-fg-faint tabular-nums"
             font-size="10"
           >
             {{ valueOf(cause).toFixed(2) }}
@@ -137,7 +140,7 @@ const BAR_W = 210
       </g>
     </svg>
 
-    <p class="mt-2 font-mono text-[10px] text-paper-500">
+    <p class="mt-2 font-mono text-[10px] text-fg-faint">
       {{ isZh ? '示意值，非單次實驗結果' : 'Illustrative — not a single experimental run' }}
     </p>
   </figure>

@@ -1,63 +1,62 @@
 <script setup lang="ts">
+/**
+ * Skills, as a ruled definition list.
+ *
+ * Previously a grid of five panels, each holding a heading and a row of tags —
+ * which is a lot of frame around very little content, and made the section the
+ * heaviest thing on the page despite being the least important. A label column
+ * against a tag column says the same thing in a third of the ink.
+ */
 import { useI18n } from 'vue-i18n'
 import Reveal from '@/components/Reveal.vue'
-import SplitText from '@/components/fx/SplitText.vue'
-import SpotlightCard from '@/components/fx/SpotlightCard.vue'
-import { SKILL_GROUPS, type SkillGroup } from '@/data/site'
+import SectionHeader from '@/components/SectionHeader.vue'
+import { SKILL_GROUPS } from '@/data/site'
 
 const { t } = useI18n()
-
-const SPAN_CLASS: Record<SkillGroup['span'], string> = {
-  2: 'bento-narrow',
-  3: 'bento-half',
-  4: 'bento-wide',
-}
 </script>
 
 <template>
-  <section id="skills" class="section relative border-t border-white/[0.06]">
+  <section id="skills" class="section section-ruled relative">
     <div class="container-x relative">
-      <Reveal>
-        <p class="eyebrow mb-6">{{ t('skills.eyebrow') }}</p>
-      </Reveal>
+      <SectionHeader
+        index="04"
+        :label="t('skills.eyebrow')"
+        :title="t('skills.title')"
+        :subtitle="t('skills.subtitle')"
+      />
 
-      <h2 class="h-display text-display-md mb-4 text-balance">
-        <SplitText :text="t('skills.title')" />
-      </h2>
-
-      <Reveal :delay="100">
-        <p class="text-paper-400 max-w-xl mb-14 text-pretty">{{ t('skills.subtitle') }}</p>
-      </Reveal>
-
-      <div class="bento">
+      <dl class="m-0 border-t border-line">
         <Reveal
           v-for="(group, i) in SKILL_GROUPS"
           :key="group.id"
-          :delay="120 + i * 70"
-          :class="[SPAN_CLASS[group.span], 'h-full']"
+          :delay="80 + i * 60"
+          class="block border-b border-line"
         >
-          <SpotlightCard tilt :max-tilt="3" class="h-full p-6 md:p-7">
-            <div class="flex items-center gap-3 mb-6">
+          <div class="grid-12 py-6 md:py-7 group/skill">
+            <dt class="col-label flex items-center gap-3 m-0">
               <span
-                class="grid place-items-center w-9 h-9 rounded-xl bg-violet-500/10
-                       border border-violet-400/25 text-violet-300 shrink-0"
+                class="grid place-items-center w-7 h-7 rounded-inner border border-line
+                       text-fg-faint shrink-0 transition-colors duration-300
+                       group-hover/skill:border-accent group-hover/skill:text-accent"
                 aria-hidden="true"
               >
-                <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" :d="group.icon" />
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" :d="group.icon" />
                 </svg>
               </span>
-              <h3 class="font-mono text-xs uppercase tracking-wider text-paper-200 m-0">
+              <span class="font-mono text-[11px] uppercase tracking-[0.14em] text-fg">
                 {{ t(`skills.groups.${group.id}`) }}
-              </h3>
-            </div>
+              </span>
+            </dt>
 
-            <ul class="flex flex-wrap gap-2 list-none p-0 m-0">
-              <li v-for="item in group.items" :key="item" class="chip">{{ item }}</li>
-            </ul>
-          </SpotlightCard>
+            <dd class="col-body m-0 mt-4 md:mt-0">
+              <ul class="flex flex-wrap gap-1.5 list-none p-0 m-0">
+                <li v-for="item in group.items" :key="item" class="chip">{{ item }}</li>
+              </ul>
+            </dd>
+          </div>
         </Reveal>
-      </div>
+      </dl>
     </div>
   </section>
 </template>

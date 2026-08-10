@@ -1,119 +1,141 @@
 /** @type {import('tailwindcss').Config} */
+
+/**
+ * Every colour resolves through a CSS custom property rather than a literal,
+ * so one `data-theme` flip on `<html>` re-tints the whole page without a second
+ * set of utilities. The channel triples live in `src/style.css`; this file only
+ * names them.
+ *
+ * The names are semantic, not hue-based — `accent` rather than `violet` — so a
+ * future palette change is a variable edit, not a find-and-replace across 40
+ * components.
+ */
+const themed = (name) => `rgb(var(--${name}) / <alpha-value>)`
+
 export default {
+  darkMode: ['class', '[data-theme="dark"]'],
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
-        // "Causal Ink" palette — deep blue base.
-        // Lifted off near-black and pushed toward blue: the previous values sat
-        // close enough to #000 that translucent surfaces had nothing to lift
-        // away from, so every glass card read as flat dark grey.
-        ink: {
-          950: '#0D1220', // deepest bg
-          900: '#141C31', // primary bg
-          800: '#1C2540', // surface
-          700: '#25304F', // raised surface
-          600: '#2F3C60', // border
-          500: '#3F4E76', // strong border
+        // ---- Ground ---------------------------------------------------------
+        // `page` is the body; `sunk` is the recessed band used to separate
+        // sections without jumping to a different lightness family.
+        page: themed('bg'),
+        sunk: themed('bg-sunk'),
+
+        surface: {
+          DEFAULT: themed('surface'),
+          raised: themed('surface-raised'),
         },
-        // Foreground scale, lifted alongside `ink`. The muted end had to move
-        // most: against the brighter base, the old #56617A landed around 2.3:1,
-        // well under the 4.5:1 these 10–11px mono labels need.
-        paper: {
-          50: '#FFFFFF',
-          100: '#EEF2F9', // primary fg
-          200: '#D8DFEE',
-          300: '#BFC8DA', // secondary fg
-          400: '#A2AECA', // dimmed fg
-          500: '#8A97B5', // muted fg
+
+        line: {
+          DEFAULT: themed('line'),
+          strong: themed('line-strong'),
         },
-        // primary accent — the "intervention" colour
-        violet: {
-          300: '#B6A9FF',
-          400: '#9585FF',
-          500: '#7C6AFF',
-          600: '#6350E6',
-          700: '#4C3CC4',
+
+        // ---- Foreground -----------------------------------------------------
+        // Three steps only. A longer ramp invites picking the wrong one; these
+        // each clear 4.5:1 on `page` in both themes.
+        fg: {
+          DEFAULT: themed('fg'),
+          muted: themed('fg-muted'),
+          faint: themed('fg-faint'),
         },
-        // secondary accent — the "signal" colour
-        amber: {
-          300: '#FFD98A',
-          400: '#F5B841',
-          500: '#EFA820',
-          600: '#D08D0D',
+
+        // ---- Accent ---------------------------------------------------------
+        // One accent, full stop. `on` is the text colour that sits on top of a
+        // filled accent surface.
+        accent: {
+          DEFAULT: themed('accent'),
+          soft: themed('accent-soft'),
+          on: themed('accent-on'),
         },
-        // tertiary accent — used sparingly in aurora / bento gradients
-        cyan: {
-          300: '#8CE8F5',
-          400: '#48D3E8',
-          500: '#22B8D1',
+
+        // ---- Data ----------------------------------------------------------
+        // Reserved for chart series, where a single hue can't encode two
+        // categories. Never used for interface chrome.
+        data: {
+          1: themed('accent'),
+          2: themed('data-2'),
+          3: themed('data-3'),
         },
       },
+
       fontFamily: {
-        sans: ['Inter', 'Noto Sans TC', 'system-ui', 'sans-serif'],
-        display: ['Instrument Serif', 'Noto Serif TC', 'Georgia', 'serif'],
-        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        // Geist over Inter: same neutral-grotesque job, but with a real
+        // personality in the `a`, `g` and `t` terminals instead of the
+        // house-style-of-everything Inter has become.
+        sans: ['Geist', 'Noto Sans TC', 'system-ui', 'sans-serif'],
+        // Fraunces is a variable serif with an optical-size axis, so display
+        // sizes get genuinely different letterforms rather than a scaled-up
+        // text face.
+        display: ['Fraunces', 'Noto Serif TC', 'Georgia', 'serif'],
+        mono: ['Geist Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
+
       fontSize: {
-        'display-2xl': ['clamp(42px, 7.6vw, 106px)', { lineHeight: '1.0', letterSpacing: '-0.03em' }],
-        'display-xl': ['clamp(44px, 8vw, 108px)', { lineHeight: '1.02', letterSpacing: '-0.03em' }],
-        'display-lg': ['clamp(36px, 6vw, 76px)', { lineHeight: '1.05', letterSpacing: '-0.025em' }],
-        'display-md': ['clamp(30px, 4.5vw, 54px)', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
-        'display-sm': ['clamp(24px, 3.5vw, 38px)', { lineHeight: '1.15', letterSpacing: '-0.015em' }],
+        'display-2xl': ['clamp(46px, 8.4vw, 120px)', { lineHeight: '0.94', letterSpacing: '-0.035em' }],
+        'display-xl': ['clamp(40px, 6.6vw, 88px)', { lineHeight: '0.98', letterSpacing: '-0.032em' }],
+        'display-lg': ['clamp(34px, 5.4vw, 68px)', { lineHeight: '1.02', letterSpacing: '-0.028em' }],
+        'display-md': ['clamp(28px, 4vw, 50px)', { lineHeight: '1.06', letterSpacing: '-0.022em' }],
+        'display-sm': ['clamp(22px, 2.8vw, 32px)', { lineHeight: '1.14', letterSpacing: '-0.016em' }],
       },
+
       maxWidth: {
-        content: '76rem',
+        content: '78rem',
+        // Roughly 68 characters at the body size — the readable measure.
+        prose: '34rem',
       },
+
       borderRadius: {
-        bento: '1.5rem',
+        // Editorial, not pill-shaped: containers get a modest radius and inner
+        // elements get less, so the nesting reads as printed panels.
+        panel: '0.75rem',
+        inner: '0.375rem',
       },
+
       boxShadow: {
-        // Layered glass: inner top highlight + outer ambient drop.
-        glass: '0 1px 0 0 rgba(255,255,255,0.06) inset, 0 16px 48px -16px rgba(0,0,0,0.7)',
-        'glass-lifted':
-          '0 1px 0 0 rgba(255,255,255,0.10) inset, 0 28px 68px -20px rgba(0,0,0,0.8)',
-        glow: '0 0 0 1px rgba(124,106,255,0.28), 0 20px 60px -20px rgba(124,106,255,0.45)',
+        // Tinted with the page's warm hue instead of neutral black, so shadows
+        // sit in the same light as everything else.
+        panel: '0 1px 2px rgb(var(--shadow) / 0.05), 0 8px 24px -12px rgb(var(--shadow) / 0.16)',
+        lifted: '0 2px 4px rgb(var(--shadow) / 0.06), 0 20px 44px -18px rgb(var(--shadow) / 0.26)',
+        float: '0 4px 10px rgb(var(--shadow) / 0.08), 0 28px 60px -22px rgb(var(--shadow) / 0.34)',
       },
+
+      zIndex: {
+        backdrop: '-10',
+        dock: '40',
+        header: '50',
+        skip: '60',
+      },
+
       animation: {
-        'fade-up': 'fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both',
+        'fade-up': 'fadeUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) both',
         'pulse-soft': 'pulseSoft 3.2s ease-in-out infinite',
-        marquee: 'marquee 42s linear infinite',
-        // Reactbits-style decorative motion
-        aurora: 'aurora 22s ease-in-out infinite',
-        'aurora-slow': 'aurora 34s ease-in-out infinite reverse',
-        shimmer: 'shimmer 4.5s linear infinite',
+        drift: 'drift 26s ease-in-out infinite',
+        'drift-slow': 'drift 38s ease-in-out infinite reverse',
         float: 'float 9s ease-in-out infinite',
-        'border-spin': 'borderSpin 6s linear infinite',
       },
+
       keyframes: {
         fadeUp: {
-          '0%': { opacity: '0', transform: 'translateY(22px)' },
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         pulseSoft: {
           '0%, 100%': { opacity: '0.35' },
           '50%': { opacity: '0.9' },
         },
-        marquee: {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-50%)' },
-        },
-        aurora: {
-          '0%, 100%': { transform: 'translate3d(-6%, -4%, 0) scale(1)' },
-          '33%': { transform: 'translate3d(8%, 6%, 0) scale(1.18)' },
-          '66%': { transform: 'translate3d(-4%, 10%, 0) scale(0.92)' },
-        },
-        shimmer: {
-          '0%': { backgroundPosition: '200% 0' },
-          '100%': { backgroundPosition: '-200% 0' },
+        // Replaces the old `aurora` loop: smaller travel, no scaling, so the
+        // fields read as ambient light rather than as moving blobs.
+        drift: {
+          '0%, 100%': { transform: 'translate3d(-3%, -2%, 0)' },
+          '50%': { transform: 'translate3d(4%, 3%, 0)' },
         },
         float: {
           '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-14px)' },
-        },
-        borderSpin: {
-          '0%': { transform: 'rotate(0deg)' },
-          '100%': { transform: 'rotate(360deg)' },
+          '50%': { transform: 'translateY(-12px)' },
         },
       },
     },

@@ -23,9 +23,8 @@ function toTop(): void {
     <button
       v-show="isVisible"
       type="button"
-      class="fixed bottom-24 right-6 z-40 w-11 h-11 grid place-items-center rounded-full
-             bg-ink-900/70 border border-white/[0.10] backdrop-blur-2xl shadow-glass text-paper-300
-             hover:border-violet-400/60 hover:text-paper-50 transition-colors"
+      class="fixed bottom-24 right-6 z-dock w-10 h-10 grid place-items-center rounded-inner
+             chrome text-fg-muted hover:border-accent hover:text-accent transition-colors"
       :aria-label="t('a11y.backToTop')"
       @click="toTop"
     >

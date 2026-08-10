@@ -11,6 +11,7 @@
  * Pure SVG. No charting or graph library involved.
  */
 import { computed, ref } from 'vue'
+import { VIZ } from '@/components/viz/palette'
 
 type NodeKind = 'cause' | 'mediator' | 'target'
 
@@ -128,7 +129,7 @@ const hasIntervention = computed(() => intervened.value.size > 0)
           v-for="edge in EDGES"
           :key="`${edge.from}-${edge.to}`"
           :d="edgePath(edge.from, edge.to)"
-          :stroke="isEdgeLive(edge.from) ? '#7C6AFF' : '#212B3D'"
+          :style="{ stroke: isEdgeLive(edge.from) ? VIZ.accent : VIZ.grid }"
           :stroke-width="isEdgeLive(edge.from) ? 1.6 : 1.2"
           :stroke-dasharray="isEdgeLive(edge.from) ? undefined : '3 4'"
           :opacity="isEdgeLive(edge.from) ? 0.75 : 0.5"
@@ -142,7 +143,7 @@ const hasIntervention = computed(() => intervened.value.size > 0)
           v-for="(edge, i) in EDGES.filter((e) => isEdgeLive(e.from))"
           :key="`pulse-${edge.from}-${edge.to}`"
           r="2.4"
-          fill="#B6A9FF"
+          :style="{ fill: VIZ.accentSoft }"
         >
           <animateMotion
             :path="edgePath(edge.from, edge.to)"
@@ -169,16 +170,16 @@ const hasIntervention = computed(() => intervened.value.size > 0)
               :cx="node.x"
               :cy="node.y"
               :r="20"
-              fill="#F5B841"
+              :style="{ fill: VIZ.signal }"
               :opacity="0.14 + score * 0.2"
               class="transition-opacity duration-500"
             />
-            <circle :cx="node.x" :cy="node.y" r="11" fill="#F5B841" />
+            <circle :cx="node.x" :cy="node.y" r="11" :style="{ fill: VIZ.signal }" />
             <text
               :x="node.x"
               :y="node.y + 38"
               text-anchor="middle"
-              class="fill-paper-400 font-mono"
+              class="fill-fg-muted font-mono"
               font-size="9"
             >
               {{ node.label }}
@@ -191,8 +192,10 @@ const hasIntervention = computed(() => intervened.value.size > 0)
               :cx="node.x"
               :cy="node.y"
               r="7"
-              :fill="isNodeLive(node.id) ? '#2E3A50' : '#18202F'"
-              :stroke="isNodeLive(node.id) ? '#7C6AFF' : '#212B3D'"
+              :style="{
+                fill: isNodeLive(node.id) ? VIZ.track : VIZ.ground,
+                stroke: isNodeLive(node.id) ? VIZ.accent : VIZ.grid,
+              }"
               stroke-width="1.4"
               class="transition-all duration-500"
             />
@@ -217,7 +220,7 @@ const hasIntervention = computed(() => intervened.value.size > 0)
               :cx="node.x"
               :cy="node.y"
               r="15"
-              fill="#7C6AFF"
+              :style="{ fill: VIZ.accent }"
               opacity="0.16"
               class="animate-pulse-soft"
             />
@@ -225,8 +228,10 @@ const hasIntervention = computed(() => intervened.value.size > 0)
               :cx="node.x"
               :cy="node.y"
               :r="9"
-              :fill="intervened.has(node.id) ? '#111827' : '#7C6AFF'"
-              :stroke="intervened.has(node.id) ? '#56617A' : 'transparent'"
+              :style="{
+                fill: intervened.has(node.id) ? VIZ.ground : VIZ.accent,
+                stroke: intervened.has(node.id) ? VIZ.muted : 'transparent',
+              }"
               stroke-width="1.6"
               stroke-dasharray="3 3"
               class="transition-all duration-300"
@@ -235,7 +240,7 @@ const hasIntervention = computed(() => intervened.value.size > 0)
             <path
               v-if="intervened.has(node.id)"
               :d="`M ${node.x - 4.5} ${node.y - 4.5} L ${node.x + 4.5} ${node.y + 4.5} M ${node.x + 4.5} ${node.y - 4.5} L ${node.x - 4.5} ${node.y + 4.5}`"
-              stroke="#7A869E"
+              :style="{ stroke: VIZ.muted }"
               stroke-width="1.6"
               stroke-linecap="round"
             />
@@ -244,7 +249,7 @@ const hasIntervention = computed(() => intervened.value.size > 0)
               :y="node.y - 19"
               text-anchor="middle"
               class="font-mono transition-colors duration-300"
-              :class="intervened.has(node.id) ? 'fill-paper-500' : 'fill-paper-300'"
+              :class="intervened.has(node.id) ? 'fill-fg-faint' : 'fill-fg-muted'"
               font-size="9"
             >
               {{ node.label }}
@@ -255,14 +260,14 @@ const hasIntervention = computed(() => intervened.value.size > 0)
     </svg>
 
     <!-- Readout -->
-    <div class="mt-4 flex items-end justify-between gap-4 border-t border-ink-600 pt-4">
+    <div class="mt-4 flex items-end justify-between gap-4 border-t border-line pt-4">
       <div>
-        <p class="font-mono text-[10px] uppercase tracking-wider text-paper-500">
+        <p class="font-mono text-[10px] uppercase tracking-wider text-fg-faint">
           {{ hasIntervention ? 'P(fraud | do(·))' : 'P(fraud)' }}
         </p>
-        <p class="h-display text-3xl text-paper-50 tabular-nums">
+        <p class="h-display text-3xl text-fg tabular-nums">
           {{ scoreLabel }}
-          <span v-if="hasIntervention" class="font-mono text-xs text-amber-400 align-middle">
+          <span v-if="hasIntervention" class="font-mono text-xs text-data-3 align-middle">
             {{ delta.toFixed(2) }}
           </span>
         </p>
@@ -271,13 +276,13 @@ const hasIntervention = computed(() => intervened.value.size > 0)
       <button
         v-if="hasIntervention"
         type="button"
-        class="font-mono text-[10px] uppercase tracking-wider text-paper-400
-               hover:text-violet-400 transition-colors"
+        class="font-mono text-[10px] uppercase tracking-wider text-fg-muted
+               hover:text-accent transition-colors"
         @click="reset"
       >
         reset
       </button>
-      <p v-else class="font-mono text-[10px] text-paper-500 text-right max-w-[52%] leading-relaxed">
+      <p v-else class="font-mono text-[10px] text-fg-faint text-right max-w-[52%] leading-relaxed">
         click a cause to intervene
       </p>
     </div>

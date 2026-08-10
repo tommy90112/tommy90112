@@ -1,30 +1,31 @@
 <script setup lang="ts">
 /**
- * SpotlightCard — a glass surface with a pointer-tracking highlight, and an
- * optional 3D tilt.
+ * A panel with a pointer-tracking highlight, and an optional 3D tilt.
  *
  * Both effects share one pointer handler and one rAF, because running a
  * separate listener per effect on a grid of a dozen cards is what makes this
  * pattern janky. Tilt is suppressed on coarse pointers (no hover to track) and
- * under reduced-motion; the spotlight degrades to a static resting glow.
+ * under reduced-motion; the highlight simply never appears.
+ *
+ * The highlight is the accent at very low alpha rather than a configurable
+ * tint. Per-card colours meant a project grid lit up in three different hues
+ * on hover, which read as a bug rather than as a system.
  */
 import { computed, onUnmounted, ref } from 'vue'
 import { usePrefersReducedMotion } from '@/composables/usePrefersReducedMotion'
 
 const props = withDefaults(
   defineProps<{
-    /** Enable the 3D tilt in addition to the spotlight. */
+    /** Enable the 3D tilt in addition to the highlight. */
     tilt?: boolean
     /** Max tilt in degrees at the card's corners. */
     maxTilt?: number
-    /** Spotlight tint as `r, g, b`. */
-    rgb?: string
-    /** Spotlight radius in px. */
+    /** Highlight radius in px. */
     radius?: number
     /** Rendered element — use `article`/`li` where the semantics call for it. */
     as?: string
   }>(),
-  { tilt: false, maxTilt: 7, rgb: '124, 106, 255', radius: 340, as: 'div' },
+  { tilt: false, maxTilt: 5, radius: 420, as: 'div' },
 )
 
 const prefersReduced = usePrefersReducedMotion()
@@ -48,13 +49,13 @@ const canTilt = computed(
 )
 
 const spotlightStyle = computed(() => ({
-  background: `radial-gradient(${props.radius}px circle at ${pointerX.value}% ${pointerY.value}%, rgba(${props.rgb}, 0.16), transparent 68%)`,
+  background: `radial-gradient(${props.radius}px circle at ${pointerX.value}% ${pointerY.value}%, rgb(var(--accent) / 0.09), transparent 70%)`,
 }))
 
 const transformStyle = computed(() => {
   if (!canTilt.value) return undefined
   return {
-    transform: `perspective(1000px) rotateX(${tiltX.value}deg) rotateY(${tiltY.value}deg) translateZ(0)`,
+    transform: `perspective(1200px) rotateX(${tiltX.value}deg) rotateY(${tiltY.value}deg) translateZ(0)`,
   }
 })
 
@@ -107,25 +108,16 @@ onUnmounted(() => {
   <component
     :is="props.as"
     ref="rootRef"
-    class="group/spot relative isolate overflow-hidden glass-card glass-hover
-           transition-transform duration-300 ease-out will-change-transform"
+    class="group/spot relative isolate overflow-hidden panel panel-hover will-change-transform"
     :style="transformStyle"
     @pointermove="onPointerMove"
     @pointerenter="onPointerEnter"
     @pointerleave="onPointerLeave"
   >
-    <!-- Pointer-tracked glow -->
     <div
       class="absolute inset-0 -z-10 opacity-0 transition-opacity duration-300 pointer-events-none"
       :class="isHovered ? 'opacity-100' : ''"
       :style="spotlightStyle"
-      aria-hidden="true"
-    ></div>
-
-    <!-- Hairline top edge — the "lit rim" that sells the glass. -->
-    <div
-      class="absolute inset-x-0 top-0 h-px -z-10 bg-gradient-to-r from-transparent
-             via-white/25 to-transparent opacity-60 pointer-events-none"
       aria-hidden="true"
     ></div>
 

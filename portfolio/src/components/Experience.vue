@@ -1,61 +1,63 @@
 <script setup lang="ts">
+/**
+ * Experience, set as a ruled table rather than a timeline of cards.
+ *
+ * The vertical rail with glowing nodes was decoration standing in for
+ * structure: two entries don't need a rail to be read in order. A period
+ * column against a description column is how a CV is actually typeset, and it
+ * scans in one pass.
+ */
 import { useI18n } from 'vue-i18n'
 import Reveal from '@/components/Reveal.vue'
-import SplitText from '@/components/fx/SplitText.vue'
-import SpotlightCard from '@/components/fx/SpotlightCard.vue'
+import SectionHeader from '@/components/SectionHeader.vue'
 import { EXPERIENCE } from '@/data/site'
 
 const { t } = useI18n()
 </script>
 
 <template>
-  <section id="experience" class="section relative border-t border-white/[0.06]">
+  <section id="experience" class="section section-ruled relative">
     <div class="container-x relative">
-      <Reveal>
-        <p class="eyebrow mb-6">{{ t('experience.eyebrow') }}</p>
-      </Reveal>
+      <SectionHeader index="02" :label="t('experience.eyebrow')" :title="t('experience.title')" />
 
-      <h2 class="h-display text-display-md mb-12 text-balance">
-        <SplitText :text="t('experience.title')" />
-      </h2>
+      <ol class="list-none p-0 m-0 border-t border-line">
+        <li v-for="(entry, i) in EXPERIENCE" :key="entry.id" class="border-b border-line">
+          <Reveal :delay="80 + i * 90">
+            <div class="grid-12 py-8 md:py-10 group/entry">
+              <!-- Period column: fixed-width mono so every row's dates align. -->
+              <div class="col-label flex items-start gap-2.5">
+                <span
+                  v-if="entry.current"
+                  class="mt-[7px] w-1.5 h-1.5 rounded-full bg-accent shrink-0 animate-pulse-soft"
+                  :aria-label="t('experience.currentLabel')"
+                ></span>
+                <span
+                  v-else
+                  class="mt-[7px] w-1.5 h-1.5 rounded-full border border-line-strong shrink-0"
+                  aria-hidden="true"
+                ></span>
+                <span class="font-mono text-xs text-fg-faint tabular-nums">
+                  {{ t(`experience.items.${entry.id}.period`) }}
+                </span>
+              </div>
 
-      <ol class="list-none p-0 m-0 relative">
-        <!-- Timeline rail, sitting behind the cards -->
-        <span
-          class="absolute left-[7px] top-3 bottom-14 w-px hidden sm:block
-                 bg-gradient-to-b from-violet-500/50 via-white/10 to-transparent"
-          aria-hidden="true"
-        ></span>
-
-        <li v-for="(entry, i) in EXPERIENCE" :key="entry.id">
-          <Reveal :delay="100 + i * 80">
-            <div class="relative sm:pl-12 pb-5">
-              <!-- Node -->
-              <span
-                class="absolute left-0 top-7 hidden sm:grid place-items-center w-[15px] h-[15px]
-                       rounded-full border-2 border-ink-950"
-                :class="entry.current ? 'bg-violet-500 shadow-[0_0_16px_2px_rgba(124,106,255,0.6)]' : 'bg-ink-500'"
-                aria-hidden="true"
-              ></span>
-
-              <SpotlightCard tilt :max-tilt="3" class="p-6 md:p-7">
-                <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 mb-2">
-                  <h3 class="text-lg text-paper-50 m-0">
+              <div class="col-body mt-4 md:mt-0">
+                <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                  <h3
+                    class="text-xl text-fg m-0 transition-colors duration-300
+                           group-hover/entry:text-accent"
+                  >
                     {{ t(`experience.items.${entry.id}.org`) }}
                   </h3>
-                  <span class="font-mono text-xs text-paper-500">
-                    {{ t(`experience.items.${entry.id}.period`) }}
-                  </span>
+                  <p class="font-mono text-xs text-accent m-0">
+                    {{ t(`experience.items.${entry.id}.role`) }}
+                  </p>
                 </div>
 
-                <p class="font-mono text-xs text-violet-400 mb-3">
-                  {{ t(`experience.items.${entry.id}.role`) }}
-                </p>
-
-                <p class="text-sm text-paper-300 leading-relaxed max-w-2xl text-pretty m-0">
+                <p class="mt-3 text-sm text-fg-muted leading-relaxed max-w-prose text-pretty m-0">
                   {{ t(`experience.items.${entry.id}.description`) }}
                 </p>
-              </SpotlightCard>
+              </div>
             </div>
           </Reveal>
         </li>
@@ -68,9 +70,7 @@ const { t } = useI18n()
         再到 src/i18n/en.ts 與 zh-TW.ts 的 experience.items 補對應文案。
       -->
       <Reveal :delay="300">
-        <p class="font-mono text-[11px] text-paper-500 sm:pl-12 mt-4">
-          {{ t('experience.note') }}
-        </p>
+        <p class="font-mono text-[11px] text-fg-faint mt-6">{{ t('experience.note') }}</p>
       </Reveal>
     </div>
   </section>

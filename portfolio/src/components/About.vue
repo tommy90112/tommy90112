@@ -1,8 +1,15 @@
 <script setup lang="ts">
+/**
+ * About.
+ *
+ * Body copy sits directly on the page rather than inside a panel. Prose in a
+ * card reads as a UI element; prose on the ground reads as something written.
+ * The only enclosed block here is the status rail, where the panel is doing
+ * real work — separating facts from argument.
+ */
 import { useI18n } from 'vue-i18n'
 import Reveal from '@/components/Reveal.vue'
-import SplitText from '@/components/fx/SplitText.vue'
-import SpotlightCard from '@/components/fx/SpotlightCard.vue'
+import SectionHeader from '@/components/SectionHeader.vue'
 
 const { t } = useI18n()
 
@@ -10,70 +17,69 @@ const focusKeys = ['about.focus1', 'about.focus2', 'about.focus3', 'about.focus4
 </script>
 
 <template>
-  <section id="about" class="section relative border-t border-white/[0.06]">
+  <section id="about" class="section section-ruled relative">
     <div class="container-x relative">
-      <Reveal>
-        <p class="eyebrow mb-6">{{ t('about.eyebrow') }}</p>
-      </Reveal>
+      <SectionHeader index="01" :label="t('about.eyebrow')" :title="t('about.title')" />
 
-      <h2 class="h-display text-display-md mb-12 text-balance max-w-3xl">
-        <SplitText :text="t('about.title')" />
-      </h2>
-
-      <div class="bento">
-        <!-- Narrative -->
-        <Reveal :delay="60" class="bento-wide h-full">
-          <SpotlightCard class="h-full p-7 md:p-9">
-            <div class="space-y-5 text-paper-300 leading-relaxed text-pretty">
-              <p>{{ t('about.p1') }}</p>
-              <p>{{ t('about.p2') }}</p>
-              <p>{{ t('about.p3') }}</p>
-            </div>
-          </SpotlightCard>
+      <div class="grid-12">
+        <Reveal :delay="60" class="col-major">
+          <div class="space-y-6 text-[17px] leading-[1.7] text-fg-muted text-pretty max-w-prose">
+            <!-- The opening paragraph carries the thesis, so it is set a step
+                 larger and darker than the two that qualify it. -->
+            <p class="text-fg text-lg leading-[1.65] m-0">{{ t('about.p1') }}</p>
+            <p class="m-0">{{ t('about.p2') }}</p>
+            <p class="m-0">{{ t('about.p3') }}</p>
+          </div>
         </Reveal>
 
-        <!-- Current status -->
-        <Reveal :delay="140" class="bento-narrow h-full">
-          <SpotlightCard tilt :max-tilt="5" rgb="245, 184, 65" class="h-full p-7 flex flex-col justify-center">
-            <h3 class="font-mono text-xs uppercase tracking-wider text-amber-400 mb-6">
+        <!-- Starts at column 8, not 9: a 5-column span from 9 runs off the
+             12-column bed and grid silently creates a 13th track for it. -->
+        <Reveal :delay="140" class="col-minor md:col-start-8">
+          <div class="panel p-6 md:p-7">
+            <h3 class="font-mono text-[10.5px] uppercase tracking-[0.18em] text-accent m-0 mb-5">
               {{ t('about.currentTitle') }}
             </h3>
-            <dl class="space-y-4 text-sm m-0">
-              <div>
+            <dl class="m-0 divide-y divide-line">
+              <div class="pb-4">
                 <dt class="sr-only">Employer</dt>
-                <dd class="text-paper-100 m-0">{{ t('about.currentRole') }}</dd>
+                <dd class="text-fg m-0">{{ t('about.currentRole') }}</dd>
               </div>
-              <div>
+              <div class="py-4">
                 <dt class="sr-only">Study</dt>
-                <dd class="text-paper-300 m-0">{{ t('about.currentStudy') }}</dd>
+                <dd class="text-sm text-fg-muted m-0">{{ t('about.currentStudy') }}</dd>
               </div>
-              <div>
+              <div class="pt-4">
                 <dt class="sr-only">Location</dt>
-                <dd class="font-mono text-xs text-paper-500 m-0">{{ t('about.currentLocation') }}</dd>
+                <dd class="font-mono text-[11px] text-fg-faint m-0">{{ t('about.currentLocation') }}</dd>
               </div>
             </dl>
-          </SpotlightCard>
-        </Reveal>
-
-        <!-- Focus areas, spread across the full row -->
-        <Reveal :delay="200" class="bento-full">
-          <SpotlightCard class="p-7 md:p-9" :radius="520">
-            <h3 class="font-mono text-xs uppercase tracking-wider text-violet-400 mb-7">
-              {{ t('about.focusTitle') }}
-            </h3>
-            <ul class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 list-none p-0 m-0">
-              <li v-for="(key, i) in focusKeys" :key="key" class="flex flex-col gap-3">
-                <span class="font-mono text-[11px] text-violet-400/70 tabular-nums">
-                  {{ String(i + 1).padStart(2, '0') }}
-                </span>
-                <span class="text-sm text-paper-300 leading-relaxed text-pretty">
-                  {{ t(key) }}
-                </span>
-              </li>
-            </ul>
-          </SpotlightCard>
+          </div>
         </Reveal>
       </div>
+
+      <!-- Focus areas as a ruled four-up, not four cards: each item is one
+           line of text, and a card around one line is all frame, no picture. -->
+      <Reveal :delay="200">
+        <h3
+          class="font-mono text-[10.5px] uppercase tracking-[0.18em] text-fg-faint
+                 mt-16 md:mt-24 pb-4 border-b border-line"
+        >
+          {{ t('about.focusTitle') }}
+        </h3>
+        <ul class="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-6 list-none p-0 m-0">
+          <li
+            v-for="(key, i) in focusKeys"
+            :key="key"
+            class="flex flex-col gap-3 py-6 border-b border-line
+                   lg:border-b-0 lg:border-r lg:last:border-r-0 lg:pr-6"
+          >
+            <span class="font-mono text-[11px] text-accent tabular-nums">
+              {{ String(i + 1).padStart(2, '0') }}
+            </span>
+            <span class="text-sm text-fg-muted leading-relaxed text-pretty">{{ t(key) }}</span>
+          </li>
+        </ul>
+      </Reveal>
     </div>
   </section>
 </template>

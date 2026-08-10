@@ -2,7 +2,7 @@
 /**
  * Source and live-demo links for a project card — with the "private" notice
  * standing in wherever there is no public repository.
- * Extracted so all three bento card layouts share one implementation.
+ * Extracted so all three card layouts share one implementation.
  */
 import { useI18n } from 'vue-i18n'
 import type { Project } from '@/data/site'
@@ -19,7 +19,7 @@ const { t } = useI18n()
       :href="project.repo"
       target="_blank"
       rel="noopener noreferrer"
-      class="inline-flex items-center gap-2 font-mono text-xs text-paper-200 link-underline"
+      class="inline-flex items-center gap-2 font-mono text-xs text-fg link-underline"
     >
       {{ t('projects.viewRepo') }}
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -27,7 +27,7 @@ const { t } = useI18n()
       </svg>
     </a>
 
-    <span v-if="!project.repo" class="inline-flex items-center gap-2 font-mono text-xs text-paper-500">
+    <span v-if="!project.repo" class="inline-flex items-center gap-2 font-mono text-xs text-fg-faint">
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <path
           stroke-linecap="round"
@@ -43,8 +43,8 @@ const { t } = useI18n()
       :href="project.demo"
       target="_blank"
       rel="noopener noreferrer"
-      class="inline-flex items-center gap-2 font-mono text-xs text-violet-300 link-underline
-             after:bg-violet-300"
+      class="inline-flex items-center gap-2 font-mono text-xs text-accent-soft link-underline
+             after:bg-accent-soft"
     >
       {{ t('projects.viewDemo') }}
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

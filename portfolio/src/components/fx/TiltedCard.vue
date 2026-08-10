@@ -16,8 +16,10 @@ const props = withDefaults(
     maxTilt?: number
     /** px the inner content is pushed toward the viewer. */
     depth?: number
+    /** Rendered element — use `figure` where the semantics call for it. */
+    as?: string
   }>(),
-  { maxTilt: 11, depth: 34 },
+  { maxTilt: 6, depth: 20, as: 'div' },
 )
 
 const prefersReduced = usePrefersReducedMotion()
@@ -51,8 +53,13 @@ const innerStyle = computed(() => {
   return { transform: `translateZ(${props.depth}px)` }
 })
 
+/**
+ * The sheen is the accent, not white. A white specular band is invisible on a
+ * near-white panel, so the light theme would silently lose the effect that the
+ * whole component exists for.
+ */
 const sheenStyle = computed(() => ({
-  background: `radial-gradient(420px circle at ${sheenX.value}% ${sheenY.value}%, rgba(255,255,255,0.16), transparent 60%)`,
+  background: `radial-gradient(460px circle at ${sheenX.value}% ${sheenY.value}%, rgb(var(--accent) / 0.10), transparent 62%)`,
 }))
 
 function applyPointer(): void {
@@ -99,16 +106,17 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div
+  <component
+    :is="props.as"
     ref="rootRef"
-    class="relative isolate overflow-hidden glass-card [transform-style:preserve-3d]
-           transition-transform duration-[400ms] ease-out will-change-transform"
+    class="relative isolate overflow-hidden panel [transform-style:preserve-3d]
+           transition-[transform,box-shadow] duration-[400ms] ease-out will-change-transform"
+    :class="isHovered ? 'shadow-lifted' : ''"
     :style="rootStyle"
     @pointermove="onPointerMove"
     @pointerenter="onPointerEnter"
     @pointerleave="onPointerLeave"
   >
-    <!-- Specular sheen -->
     <div
       class="absolute inset-0 -z-10 opacity-0 transition-opacity duration-300 pointer-events-none"
       :class="isHovered ? 'opacity-100' : ''"
@@ -116,14 +124,8 @@ onUnmounted(() => {
       aria-hidden="true"
     ></div>
 
-    <div
-      class="absolute inset-x-0 top-0 h-px -z-10 bg-gradient-to-r from-transparent
-             via-white/30 to-transparent pointer-events-none"
-      aria-hidden="true"
-    ></div>
-
     <div class="transition-transform duration-[400ms] ease-out" :style="innerStyle">
       <slot />
     </div>
-  </div>
+  </component>
 </template>

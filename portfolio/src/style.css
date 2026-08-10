@@ -2,8 +2,131 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===========================================================================
+   Design tokens
+   ---------------------------------------------------------------------------
+   Two palettes, one set of names. Values are bare `R G B` channels so Tailwind
+   can compose them with an alpha (`rgb(var(--fg) / 0.6)`).
+
+   Both themes are built on a warm neutral axis (hue ~30°) rather than the blue
+   greys that dark UIs default to, and carry a single terracotta accent. The
+   warmth is what keeps a research portfolio from reading as another dark-mode
+   SaaS dashboard.
+
+   Theme resolution, in order:
+     1. `[data-theme="light"]` / `[data-theme="dark"]` — explicit user choice
+     2. `prefers-color-scheme: dark` — system, when no choice is stored
+     3. bare `:root` — light, the fallback
+   =========================================================================== */
+
 @layer base {
   :root {
+    /* ---- Ground: warm paper -------------------------------------------- */
+    --bg: 250 248 244; /* #FAF8F4 */
+    --bg-sunk: 243 239 231; /* #F3EFE7 — recessed band */
+    --surface: 255 254 251; /* #FFFEFB — raised panel */
+    --surface-raised: 246 242 234; /* #F6F2EA — inset / filled cell */
+
+    /* ---- Rules ---------------------------------------------------------- */
+    --line: 225 217 205; /* #E1D9CD — hairline */
+    --line-strong: 199 188 172; /* #C7BCAC — emphasised divider */
+
+    /* ---- Foreground ----------------------------------------------------- */
+    --fg: 26 22 18; /* #1A1612 — 15.9:1 on --bg */
+    --fg-muted: 74 66 57; /* #4A4239 — 9.3:1 */
+    --fg-faint: 118 108 96; /* #766C60 —  4.9:1, the floor for 11px mono */
+
+    /* ---- Accent: terracotta --------------------------------------------- */
+    --accent: 172 58 34; /* #AC3A22 — 6.4:1 on --bg */
+    --accent-soft: 196 84 56; /* #C45438 — decorative rules, hover fills */
+    --accent-on: 255 250 246; /* text on a filled accent surface */
+
+    /* ---- Data series ----------------------------------------------------
+       Only for charts, where one hue cannot encode two categories. Chosen to
+       stay distinguishable under deuteranopia: the accent is long-wavelength,
+       data-2 is a desaturated green-cyan, data-3 is a dark ochre. */
+    --data-2: 42 106 96; /* #2A6A60 */
+    --data-3: 141 110 46; /* #8D6E2E */
+
+    /* Shadow hue — carries the ground's warmth instead of neutral black. */
+    --shadow: 62 48 34;
+
+    /* Ambient light fields (PageBackdrop / Aurora) and grain, per theme. */
+    --wash-a: 172 58 34;
+    --wash-b: 42 106 96;
+    --wash-c: 190 150 90;
+    --wash-alpha: 0.1;
+    --grain-alpha: 0.03;
+    --grain-blend: multiply;
+
+    color-scheme: light;
+  }
+
+  /* System preference, only while the user hasn't chosen explicitly. */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      --bg: 18 16 14; /* #12100E — warm charcoal, never #000 */
+      --bg-sunk: 13 12 10; /* #0D0C0A */
+      --surface: 28 25 21; /* #1C1915 */
+      --surface-raised: 38 34 29; /* #26221D */
+
+      --line: 54 48 41; /* #363029 */
+      --line-strong: 82 73 62; /* #52493E */
+
+      --fg: 242 236 227; /* #F2ECE3 — 15.2:1 on --bg */
+      --fg-muted: 186 176 163; /* #BAB0A3 — 8.6:1 */
+      --fg-faint: 143 133 120; /* #8F8578 — 5.0:1 */
+
+      --accent: 232 116 78; /* #E8744E — 7.1:1 on --bg */
+      --accent-soft: 245 152 118; /* #F59876 */
+      --accent-on: 26 16 11;
+
+      --data-2: 110 178 160; /* #6EB2A0 */
+      --data-3: 213 176 106; /* #D5B06A */
+
+      --shadow: 0 0 0;
+
+      --wash-a: 232 116 78;
+      --wash-b: 78 150 138;
+      --wash-c: 190 150 90;
+      --wash-alpha: 0.16;
+      --grain-alpha: 0.045;
+      --grain-blend: overlay;
+
+      color-scheme: dark;
+    }
+  }
+
+  /* Explicit choice wins over the media query in both directions. */
+  :root[data-theme='dark'] {
+    --bg: 18 16 14;
+    --bg-sunk: 13 12 10;
+    --surface: 28 25 21;
+    --surface-raised: 38 34 29;
+
+    --line: 54 48 41;
+    --line-strong: 82 73 62;
+
+    --fg: 242 236 227;
+    --fg-muted: 186 176 163;
+    --fg-faint: 143 133 120;
+
+    --accent: 232 116 78;
+    --accent-soft: 245 152 118;
+    --accent-on: 26 16 11;
+
+    --data-2: 110 178 160;
+    --data-3: 213 176 106;
+
+    --shadow: 0 0 0;
+
+    --wash-a: 232 116 78;
+    --wash-b: 78 150 138;
+    --wash-c: 190 150 90;
+    --wash-alpha: 0.16;
+    --grain-alpha: 0.045;
+    --grain-blend: overlay;
+
     color-scheme: dark;
   }
 
@@ -11,13 +134,26 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Anchored sections clear the fixed header. */
+    scroll-padding-top: 6rem;
   }
 
   body {
-    @apply bg-ink-950 text-paper-200 font-sans antialiased;
+    @apply bg-page text-fg-muted font-sans antialiased;
+    /* Geist ships contextual alternates and proper tabular figures; both are
+       off by default. */
+    font-feature-settings: 'cv11', 'ss01';
   }
 
-  /* Respect users who prefer reduced motion: kill every decorative animation. */
+  /* Theme swap is a colour change, not a repaint the user should watch — but
+     it must not become a global transition that fights every hover state. */
+  html.theme-transition,
+  html.theme-transition body {
+    transition:
+      background-color 0.35s ease,
+      color 0.35s ease;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
@@ -32,122 +168,190 @@
   }
 
   ::selection {
-    @apply bg-violet-500/30 text-paper-50;
+    @apply bg-accent/25 text-fg;
   }
 
-  /* Keyboard focus stays visible everywhere. */
   :focus-visible {
-    @apply outline-none ring-2 ring-violet-400 ring-offset-2 ring-offset-ink-950 rounded-sm;
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-page rounded-inner;
+  }
+
+  /* Display type: Fraunces' optical-size axis, plus a touch of its `SOFT` axis
+     so the serifs stay warm rather than needle-sharp at large sizes. */
+  .font-display {
+    font-variation-settings:
+      'SOFT' 20,
+      'WONK' 1,
+      'opsz' 88;
+  }
+
+  /* Numerals in data contexts must line up column to column. */
+  .font-mono,
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
   }
 }
 
 @layer components {
+  /* ---- Shell ------------------------------------------------------------- */
+
   .container-x {
-    @apply w-full max-w-content mx-auto px-6 sm:px-8 lg:px-12;
+    @apply w-full max-w-content mx-auto px-5 sm:px-8 lg:px-12;
   }
 
   .section {
-    @apply py-24 md:py-32;
+    /* Optically asymmetric: the bottom needs more air than the top because the
+       following section's rule reads as a hard stop. */
+    @apply pt-20 pb-24 md:pt-28 md:pb-36;
   }
 
-  /* Display headings — editorial serif */
-  .h-display {
-    @apply font-display font-normal text-paper-50;
+  /* Sections are separated by a rule, not by a colour jump. */
+  .section-ruled {
+    @apply border-t border-line;
   }
+
+  /* ---- Editorial headers -------------------------------------------------
+     A numbered label above a rule, with the heading hung below it. Replaces
+     the centred eyebrow-pill; the number gives each section an index the way a
+     paper's sections are numbered. */
 
   .eyebrow {
-    @apply font-mono text-xs tracking-[0.18em] uppercase text-violet-400 inline-flex items-center gap-3;
+    @apply inline-flex items-baseline gap-3 font-mono text-[11px] tracking-[0.2em] uppercase text-accent;
   }
 
-  .eyebrow::before {
-    content: '';
-    @apply w-8 h-px bg-violet-400/60;
+  .section-index {
+    @apply font-mono text-[11px] tabular-nums tracking-[0.2em] text-fg-faint;
   }
 
-  /* Centred alternative to `.eyebrow`, which carries a leading rule that only
-     reads correctly in left-aligned blocks. */
-  .badge {
-    @apply inline-flex items-center gap-2.5 rounded-full px-4 py-1.5
-           bg-white/[0.05] border border-white/[0.10] backdrop-blur-xl
-           font-mono text-[11px] tracking-[0.16em] uppercase text-paper-300;
+  /* Hairline that spans the remaining width of a header row. */
+  .rule-fill {
+    @apply h-px flex-1 bg-line origin-left;
   }
 
-  .badge-dot {
-    @apply w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse-soft;
+  .h-display {
+    @apply font-display font-normal text-fg;
   }
+
+  /* ---- Surfaces ----------------------------------------------------------
+     Solid, not glass. A panel is `surface` over `page` with one hairline —
+     the depth comes from the lightness step and a warm-tinted shadow, which
+     survives a light theme where `backdrop-blur` on white is invisible.
+
+     `backdrop-blur` is kept only for genuinely floating chrome (header, dock),
+     where there is real content moving underneath to refract. */
+
+  .panel {
+    @apply bg-surface border border-line rounded-panel shadow-panel;
+  }
+
+  .panel-hover {
+    @apply transition-[border-color,box-shadow,transform] duration-300 ease-out
+           hover:border-line-strong hover:shadow-lifted;
+  }
+
+  /* Floating chrome — the only place blur earns its cost. */
+  .chrome {
+    @apply bg-page/80 border border-line backdrop-blur-xl shadow-float;
+  }
+
+  /* ---- Controls ----------------------------------------------------------- */
 
   .btn {
-    @apply inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium
-           transition-colors duration-200;
+    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-inner text-sm font-medium
+           transition-[background-color,border-color,color,transform] duration-200
+           active:translate-y-px;
   }
 
   .btn-primary {
-    @apply btn bg-violet-500 text-white hover:bg-violet-400
-           shadow-[0_10px_30px_-12px_rgba(124,106,255,0.9)];
+    @apply btn bg-accent text-accent-on hover:bg-accent-soft;
   }
 
   .btn-ghost {
-    @apply btn border border-white/10 bg-white/[0.03] text-paper-200 backdrop-blur-xl
-           hover:border-violet-400/50 hover:bg-white/[0.06] hover:text-paper-50;
+    @apply btn border border-line-strong text-fg hover:border-accent hover:text-accent;
   }
 
-  /* ---- Glassmorphism surfaces -------------------------------------------
-     One shared recipe: translucent fill, hairline light border, backdrop
-     blur, and an inset top highlight that fakes a lit glass edge. */
-  .glass {
-    @apply bg-white/[0.05] border border-white/[0.11] backdrop-blur-2xl shadow-glass;
+  /* Third tier, so a section doesn't always resolve to one filled + one ghost
+     button. Reads as a link but hits like a control. */
+  .btn-text {
+    @apply inline-flex items-center gap-2 text-sm font-medium text-fg
+           border-b border-line-strong pb-0.5
+           transition-colors duration-200 hover:text-accent hover:border-accent;
   }
 
-  .glass-card {
-    @apply glass rounded-bento transition-all duration-500;
-  }
-
-  .glass-hover {
-    @apply hover:border-white/[0.20] hover:bg-white/[0.075] hover:shadow-glass-lifted;
-  }
-
+  /* Square-cornered, uppercase, hairline — a printed tag rather than a pill. */
   .chip {
-    @apply inline-flex items-center px-2.5 py-1 rounded-lg bg-white/[0.05] border border-white/[0.08]
-           font-mono text-[11px] text-paper-300 backdrop-blur-sm
-           transition-colors duration-200 hover:border-violet-400/40 hover:text-paper-100;
+    @apply inline-flex items-center px-2 py-1 rounded-[3px] border border-line
+           bg-surface-raised font-mono text-[10.5px] tracking-[0.06em] text-fg-muted
+           transition-colors duration-200 hover:border-accent/60 hover:text-fg;
   }
 
   .link-underline {
-    @apply relative text-paper-100 no-underline
-           after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-0 after:bg-violet-400
+    @apply relative text-fg no-underline
+           after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-0 after:bg-accent
            after:transition-[width] after:duration-300 hover:after:w-full;
   }
 
-  /* ---- Bento grid --------------------------------------------------------
-     A 6-column bed on desktop; children opt into spans via .bento-* classes.
-     Collapses to a single column on mobile so nothing needs media queries at
-     the call site. */
-  .bento {
-    @apply grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-5 auto-rows-[minmax(0,auto)];
+  /* ---- Grid --------------------------------------------------------------
+     A 12-column bed. The spans below are deliberately unequal (7/5, 8/4) so
+     rows don't resolve into the three-equal-cards shape. */
+
+  .grid-12 {
+    @apply grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-5 md:gap-y-6;
   }
 
-  .bento-wide {
+  .col-major {
+    @apply md:col-span-7;
+  }
+  .col-minor {
+    @apply md:col-span-5;
+  }
+  .col-wide {
+    @apply md:col-span-8;
+  }
+  .col-rail {
     @apply md:col-span-4;
   }
-
-  .bento-narrow {
-    @apply md:col-span-2;
-  }
-
-  .bento-half {
-    @apply md:col-span-3;
-  }
-
-  .bento-full {
+  .col-half {
     @apply md:col-span-6;
   }
+  .col-full {
+    @apply md:col-span-12;
+  }
 
-  /* Dot lattice — the quieter background used behind inner sections. */
-  .dot-bg {
-    background-image: radial-gradient(rgba(124, 106, 255, 0.18) 1px, transparent 1px);
-    background-size: 26px 26px;
-    mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, #000 10%, transparent 75%);
-    -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, #000 10%, transparent 75%);
+  /* Label / body split for the ruled lists (experience, skills, awards). The
+     label column holds one short mono string, so a quarter of the width left a
+     gap wide enough to read as a missing column. */
+  .col-label {
+    @apply md:col-span-3;
+  }
+  .col-body {
+    @apply md:col-span-9;
+  }
+
+  /* Headline figures — set in the display face, at the size a pull-quote
+     would be, because they are the argument rather than a decoration. */
+  .stat-value {
+    @apply block font-display text-3xl md:text-4xl text-fg tabular-nums;
+  }
+
+  /* ---- Texture -----------------------------------------------------------
+     Faint ruled lattice, replacing the violet dot grid. Reads as graph paper
+     under the hero rather than as a generic tech backdrop. */
+
+  /* Grain overlay. Opacity and blend mode live here rather than inline because
+     `mix-blend-mode` takes a keyword, and a `var()` in that position is not
+     expressible in Vue's typed style object. */
+  .grain-overlay {
+    opacity: var(--grain-alpha);
+    mix-blend-mode: var(--grain-blend);
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, rgb(var(--line) / 0.55) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--line) / 0.55) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 74% 62% at 24% 34%, #000 5%, transparent 72%);
+    -webkit-mask-image: radial-gradient(ellipse 74% 62% at 24% 34%, #000 5%, transparent 72%);
   }
 }
 
@@ -159,18 +363,13 @@
     text-wrap: pretty;
   }
 
-  /* Gradient-filled text. Pair with a `bg-gradient-*` utility. */
-  .text-gradient {
-    @apply bg-clip-text text-transparent;
-  }
-
-  /* Scroll-reveal: set by the useReveal composable. */
+  /* Scroll-reveal: `is-visible` is set by the useReveal composable. */
   .reveal {
     opacity: 0;
-    transform: translateY(22px);
+    transform: translateY(18px);
     transition:
-      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .reveal.is-visible {
     opacity: 1;

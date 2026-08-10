@@ -1,8 +1,17 @@
 <script setup lang="ts">
+/**
+ * Awards, as a ruled list.
+ *
+ * Three tinted cards with big amber icons gave four lines of text the visual
+ * weight of the whole projects section. A dated list is how recognition is
+ * normally cited, and it lets the entries be read in order — which matters,
+ * because they are chronological.
+ *
+ * `AwardEntry.span` is no longer read here; the list sets its own rhythm.
+ */
 import { useI18n } from 'vue-i18n'
 import Reveal from '@/components/Reveal.vue'
-import SplitText from '@/components/fx/SplitText.vue'
-import SpotlightCard from '@/components/fx/SpotlightCard.vue'
+import SectionHeader from '@/components/SectionHeader.vue'
 import { AWARDS, type AwardEntry } from '@/data/site'
 
 const { t } = useI18n()
@@ -13,81 +22,69 @@ const ICON_PATHS: Record<AwardEntry['icon'], string> = {
   flag: 'M4 21V4m0 0h11l-1.5 3L15 10H4',
   poster: 'M4 4h16v12H4zM8 20h8M12 16v4M7 8h6M7 12h4',
 }
-
-const SPAN_CLASS: Record<AwardEntry['span'], string> = {
-  2: 'bento-narrow',
-  3: 'bento-half',
-}
 </script>
 
 <template>
-  <section id="awards" class="section relative border-t border-white/[0.06]">
-    <div class="absolute inset-0 dot-bg opacity-30 pointer-events-none" aria-hidden="true"></div>
-
+  <section id="awards" class="section section-ruled relative bg-sunk">
     <div class="container-x relative">
-      <Reveal>
-        <p class="eyebrow mb-6">{{ t('awards.eyebrow') }}</p>
-      </Reveal>
+      <SectionHeader index="06" :label="t('awards.eyebrow')" :title="t('awards.title')" />
 
-      <h2 class="h-display text-display-md mb-12 text-balance">
-        <SplitText :text="t('awards.title')" />
-      </h2>
-
-      <ul class="bento list-none p-0 m-0">
-        <li v-for="(award, i) in AWARDS" :key="award.id" :class="SPAN_CLASS[award.span]">
-          <Reveal :delay="100 + i * 70" class="h-full">
-            <SpotlightCard
-              tilt
-              :max-tilt="6"
-              rgb="245, 184, 65"
-              class="h-full"
-              :class="award.link ? '' : 'pointer-events-none'"
+      <ol class="list-none p-0 m-0 border-t border-line">
+        <li v-for="(award, i) in AWARDS" :key="award.id" class="border-b border-line">
+          <Reveal :delay="80 + i * 70">
+            <component
+              :is="award.link ? 'a' : 'div'"
+              :href="award.link ?? undefined"
+              :target="award.link ? '_blank' : undefined"
+              :rel="award.link ? 'noopener noreferrer' : undefined"
+              class="group/award grid-12 py-7 md:py-8 no-underline"
+              :class="award.link ? 'cursor-pointer' : ''"
             >
-              <component
-                :is="award.link ? 'a' : 'div'"
-                :href="award.link ?? undefined"
-                :target="award.link ? '_blank' : undefined"
-                :rel="award.link ? 'noopener noreferrer' : undefined"
-                class="group/award flex h-full flex-col p-7 no-underline"
-              >
+              <div class="col-label flex items-center gap-3">
                 <span
-                  class="mb-6 grid place-items-center w-11 h-11 rounded-2xl
-                         bg-amber-400/10 border border-amber-400/25 text-amber-300
-                         transition-colors duration-300 group-hover/award:bg-amber-400/20"
+                  class="grid place-items-center w-8 h-8 rounded-inner border border-line
+                         text-fg-faint shrink-0 transition-colors duration-300
+                         group-hover/award:border-accent group-hover/award:text-accent"
                   aria-hidden="true"
                 >
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" :d="ICON_PATHS[award.icon]" />
                   </svg>
                 </span>
-
-                <span class="font-mono text-[11px] text-paper-500 mb-3 block">
+                <span class="font-mono text-xs text-fg-faint tabular-nums">
                   {{ t(`awards.items.${award.id}.date`) }}
                 </span>
+              </div>
 
-                <h3 class="text-base md:text-lg text-paper-50 mb-2 text-pretty">
-                  {{ t(`awards.items.${award.id}.title`) }}
-                </h3>
-
-                <p class="text-sm text-paper-400 text-pretty mb-6">
-                  {{ t(`awards.items.${award.id}.org`) }}
-                </p>
+              <div class="col-body mt-4 md:mt-0 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+                <div>
+                  <h3
+                    class="text-lg text-fg m-0 text-pretty transition-colors duration-300
+                           group-hover/award:text-accent"
+                  >
+                    {{ t(`awards.items.${award.id}.title`) }}
+                  </h3>
+                  <p class="text-sm text-fg-muted text-pretty m-0 mt-1.5">
+                    {{ t(`awards.items.${award.id}.org`) }}
+                  </p>
+                </div>
 
                 <span
                   v-if="award.link"
-                  class="mt-auto inline-flex items-center gap-2 font-mono text-xs text-paper-400
-                         transition-colors group-hover/award:text-amber-300"
+                  class="inline-flex items-center gap-2 font-mono text-[10.5px] uppercase
+                         tracking-[0.14em] text-fg-faint shrink-0 transition-colors
+                         group-hover/award:text-accent"
                 >
                   {{ t('projects.viewRepo') }}
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7m0 0H8m9 0v9" />
                   </svg>
                 </span>
-              </component>
-            </SpotlightCard>
+              </div>
+            </component>
           </Reveal>
         </li>
-      </ul>
+      </ol>
 
       <!--
         TODO: 補上其他獎項／證照／發表。

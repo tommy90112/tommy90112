@@ -3,17 +3,17 @@
  * Certifications.
  *
  * Renders nothing at all while `CERTIFICATIONS` is empty — an empty section
- * would otherwise leave a titled panel with no content, which reads worse
- * than not having the section. Sits between Skills and Awards: what you can
- * do, then what is certified, then what was recognised.
+ * would otherwise leave a titled panel with no content, which reads worse than
+ * not having the section. Sits between Skills and Awards: what you can do,
+ * then what is certified, then what was recognised.
  *
- * Uses a plain auto-fitting grid rather than the 6-column bento bed, because
- * the entry count is open-ended and a fixed span would strand the last card.
+ * An auto-fitting grid rather than the 12-column bed, because the entry count
+ * is open-ended and a fixed span would strand the last card.
  */
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Reveal from '@/components/Reveal.vue'
-import SplitText from '@/components/fx/SplitText.vue'
+import SectionHeader from '@/components/SectionHeader.vue'
 import SpotlightCard from '@/components/fx/SpotlightCard.vue'
 import { CERTIFICATIONS, type CertificationEntry } from '@/data/site'
 
@@ -46,27 +46,20 @@ function assetUrl(path: string): string {
   <section
     v-if="CERTIFICATIONS.length > 0"
     id="certifications"
-    class="section relative border-t border-white/[0.06]"
+    class="section section-ruled relative"
   >
     <div class="container-x relative">
-      <Reveal>
-        <p class="eyebrow mb-6">{{ t('certifications.eyebrow') }}</p>
-      </Reveal>
-
-      <h2 class="h-display text-display-md mb-4 text-balance">
-        <SplitText :text="t('certifications.title')" />
-      </h2>
-
-      <Reveal :delay="100">
-        <p class="text-paper-400 max-w-xl mb-14 text-pretty">
-          {{ t('certifications.subtitle') }}
-        </p>
-      </Reveal>
+      <SectionHeader
+        index="05"
+        :label="t('certifications.eyebrow')"
+        :title="t('certifications.title')"
+        :subtitle="t('certifications.subtitle')"
+      />
 
       <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 list-none p-0 m-0">
         <li v-for="(cert, i) in CERTIFICATIONS" :key="cert.id">
-          <Reveal :delay="120 + i * 70" class="h-full">
-            <SpotlightCard tilt :max-tilt="5" class="h-full">
+          <Reveal :delay="100 + i * 60" class="h-full">
+            <SpotlightCard class="h-full">
               <component
                 :is="cert.link ? 'a' : 'div'"
                 :href="cert.link ?? undefined"
@@ -74,49 +67,50 @@ function assetUrl(path: string): string {
                 :rel="cert.link ? 'noopener noreferrer' : undefined"
                 class="group/cert flex h-full flex-col p-6 md:p-7 no-underline"
               >
-                <!-- Issuer badge artwork when supplied and loadable, generic
-                     mark otherwise. -->
+                <!-- Issuer artwork when supplied and loadable, generic mark
+                     otherwise. Alt is empty because the adjacent heading names
+                     the certification; announcing it twice is noise. -->
                 <img
                   v-if="showsBadge(cert)"
                   :src="assetUrl(cert.badge!)"
                   alt=""
                   loading="lazy"
                   decoding="async"
-                  class="mb-5 w-16 h-16 object-contain
-                         transition-transform duration-300 group-hover/cert:scale-105"
+                  class="mb-6 w-16 h-16 object-contain
+                         transition-transform duration-300 group-hover/cert:scale-[1.06]"
                   @error="onBadgeError(cert.id)"
                 />
                 <span
                   v-else
-                  class="mb-5 grid place-items-center w-10 h-10 rounded-xl
-                         bg-violet-500/10 border border-violet-400/25 text-violet-300
-                         transition-colors duration-300 group-hover/cert:bg-violet-500/20"
+                  class="mb-6 grid place-items-center w-10 h-10 rounded-inner border border-line
+                         text-fg-faint transition-colors duration-300
+                         group-hover/cert:border-accent group-hover/cert:text-accent"
                   aria-hidden="true"
                 >
                   <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" :d="BADGE_ICON" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" :d="BADGE_ICON" />
                   </svg>
                 </span>
 
-                <h3 class="text-base text-paper-50 mb-2 text-pretty">
+                <h3 class="text-base text-fg m-0 mb-2 text-pretty">
                   {{ t(`certifications.items.${cert.id}.name`) }}
                 </h3>
 
-                <p class="text-sm text-paper-400 text-pretty mb-4">
+                <p class="text-sm text-fg-muted text-pretty m-0 mb-5">
                   {{ t(`certifications.items.${cert.id}.issuer`) }}
                 </p>
 
-                <div class="mt-auto flex items-center justify-between gap-3">
+                <div class="mt-auto pt-4 border-t border-line flex items-center justify-between gap-3">
                   <!-- An empty `date` collapses to zero width; `justify-between`
                        then simply pins the verify link to the right. -->
-                  <span class="font-mono text-[11px] text-paper-500">
+                  <span class="font-mono text-[10.5px] text-fg-faint tabular-nums">
                     {{ t(`certifications.items.${cert.id}.date`) }}
                   </span>
 
                   <span
                     v-if="cert.link"
-                    class="inline-flex items-center gap-1.5 font-mono text-[11px] text-paper-400
-                           transition-colors group-hover/cert:text-violet-300"
+                    class="inline-flex items-center gap-1.5 font-mono text-[10.5px] text-fg-faint
+                           transition-colors group-hover/cert:text-accent"
                   >
                     {{ t('certifications.verify') }}
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

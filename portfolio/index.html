@@ -8,7 +8,11 @@
       name="description"
       content="Portfolio of Yu-Hung Shih — data science master's student working on causal root-cause tracing for heterogeneous graph neural networks, fraud detection, and explainable AI."
     />
-    <meta name="theme-color" content="#0B1019" />
+    <meta name="author" content="Yu-Hung Shih" />
+
+    <!-- Browser chrome follows the active theme rather than pinning one colour. -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FAF8F4" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#12100E" />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Yu-Hung Shih — Causal Inference × Graph Machine Learning" />
@@ -17,13 +21,42 @@
       content="Causal root-cause tracing for heterogeneous GNNs, fraud detection, and explainable AI."
     />
     <meta property="og:url" content="https://tommy90112.github.io/tommy90112/" />
+    <meta property="og:image" content="https://tommy90112.github.io/tommy90112/og.svg" />
+    <meta property="og:locale" content="en" />
+    <meta property="og:locale:alternate" content="zh_TW" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Yu-Hung Shih — Causal Inference × Graph Machine Learning" />
+    <meta
+      name="twitter:description"
+      content="Causal root-cause tracing for heterogeneous GNNs, fraud detection, and explainable AI."
+    />
 
+    <link rel="canonical" href="https://tommy90112.github.io/tommy90112/" />
     <link rel="icon" type="image/svg+xml" href="/tommy90112/favicon.svg" />
+
+    <!--
+      Theme is resolved before first paint. Deferring this to Vue means the
+      page renders light, then flips — a flash that is far more jarring than
+      the few bytes this costs. Wrapped in try/catch because Safari throws on
+      localStorage access in private mode.
+    -->
+    <script>
+      ;(function () {
+        try {
+          var stored = localStorage.getItem('theme')
+          if (stored === 'light' || stored === 'dark') {
+            document.documentElement.setAttribute('data-theme', stored)
+          }
+        } catch (e) {
+          /* storage unavailable — fall through to the media query */
+        }
+      })()
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&family=Noto+Sans+TC:wght@300..700&family=Noto+Serif+TC:wght@400;600&display=swap"
       rel="stylesheet"
     />
   </head>

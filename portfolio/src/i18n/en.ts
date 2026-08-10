@@ -52,6 +52,7 @@ export default {
     eyebrow: 'Experience',
     title: 'Where I have been working.',
     note: 'Dates to be confirmed — see the TODO in the source.',
+    currentLabel: 'Current position',
     items: {
       cathay: {
         org: 'Cathay Life Insurance Co., Ltd.',
@@ -243,10 +244,20 @@ export default {
   footer: {
     built: 'Built with Vue, Vite and Tailwind. Source on GitHub.',
     rights: 'Yu-Hung Shih',
+    // Stated rather than linked: there is no policy page because there is
+    // nothing collected to write one about.
+    privacy: 'No analytics, no cookies, no tracking.',
+  },
+
+  theme: {
+    auto: 'Auto',
+    light: 'Light',
+    dark: 'Dark',
   },
 
   a11y: {
     toggleLanguage: 'Switch language',
+    toggleTheme: 'Colour theme',
     openMenu: 'Open navigation menu',
     closeMenu: 'Close navigation menu',
     backToTop: 'Back to top',

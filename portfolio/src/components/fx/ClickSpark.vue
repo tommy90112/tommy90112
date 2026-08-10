@@ -9,6 +9,7 @@
  */
 import { onMounted, onUnmounted, ref } from 'vue'
 import { usePrefersReducedMotion } from '@/composables/usePrefersReducedMotion'
+import { useThemeChannels } from '@/composables/useTheme'
 
 const props = withDefaults(
   defineProps<{
@@ -18,11 +19,12 @@ const props = withDefaults(
     distance?: number
     /** ms a burst lasts. */
     duration?: number
-    /** Ray colour as `r, g, b`. */
-    rgb?: string
   }>(),
-  { count: 8, distance: 20, duration: 420, rgb: '149, 133, 255' },
+  { count: 8, distance: 20, duration: 420 },
 )
+
+/** Sampled rather than fixed, so the burst stays legible in both themes. */
+const accent = useThemeChannels('accent', '232, 116, 78')
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const prefersReduced = usePrefersReducedMotion()
@@ -67,7 +69,7 @@ function draw(now: number): void {
     const length = props.distance * 0.42 * (1 - t)
     const alpha = 1 - t
 
-    ctx.strokeStyle = `rgba(${props.rgb}, ${alpha})`
+    ctx.strokeStyle = `rgba(${accent.value}, ${alpha})`
     ctx.lineWidth = 1.6
     ctx.lineCap = 'round'
 

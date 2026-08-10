@@ -8,6 +8,7 @@
  * misses it and a physics-informed one does not.
  */
 import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { VIZ } from '@/components/viz/palette'
 
 const W = 400
 const H = 300
@@ -85,13 +86,19 @@ const cells = computed<Cell[]>(() => {
   return out
 })
 
-/** Free-flowing green-ish → congested amber → stopped violet. */
+/**
+ * Free-flowing → congested, as a sequential ramp: two neutral steps for
+ * traffic that is moving, then the accent deepening as it slows, and the
+ * signal hue reserved for the stopped band. A sequential quantity wants one
+ * hue with rising intensity — the old version jumped neutral → violet → amber,
+ * which read as three unrelated categories.
+ */
 function colourFor(speed: number): string {
-  if (speed > 0.78) return '#18202F'
-  if (speed > 0.55) return '#2E3A50'
-  if (speed > 0.34) return '#6350E6'
-  if (speed > 0.18) return '#9585FF'
-  return '#F5B841'
+  if (speed > 0.78) return VIZ.track
+  if (speed > 0.55) return VIZ.grid
+  if (speed > 0.34) return VIZ.axis
+  if (speed > 0.18) return VIZ.accentSoft
+  return VIZ.accent
 }
 </script>
 
@@ -112,17 +119,17 @@ function colourFor(speed: number): string {
           :y="cell.y"
           :width="cellW + 0.6"
           :height="cellH + 0.6"
-          :fill="colourFor(cell.speed)"
+          :style="{ fill: colourFor(cell.speed) }"
         />
       </g>
 
       <!-- Axes -->
-      <g stroke="#2E3A50" stroke-width="1">
+      <g :style="{ stroke: VIZ.axis }" stroke-width="1">
         <line :x1="PAD.left" :y1="PAD.top" :x2="PAD.left" :y2="H - PAD.bottom" />
         <line :x1="PAD.left" :y1="H - PAD.bottom" :x2="W - PAD.right" :y2="H - PAD.bottom" />
       </g>
 
-      <g class="font-mono fill-paper-500" font-size="9">
+      <g class="font-mono fill-fg-faint" font-size="9">
         <text :x="PAD.left - 6" :y="PAD.top + 8" text-anchor="end">km</text>
         <text :x="W - PAD.right" :y="H - PAD.bottom + 16" text-anchor="end">time →</text>
       </g>
@@ -131,7 +138,7 @@ function colourFor(speed: number): string {
       <g>
         <path
           d="M 300 200 L 210 116"
-          stroke="#F5B841"
+          :style="{ stroke: VIZ.signal }"
           stroke-width="1.4"
           stroke-dasharray="4 4"
           fill="none"
@@ -139,10 +146,10 @@ function colourFor(speed: number): string {
         />
         <defs>
           <marker id="wave-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#F5B841" />
+            <path d="M 0 0 L 10 5 L 0 10 z" :style="{ fill: VIZ.signal }" />
           </marker>
         </defs>
-        <text x="306" y="214" class="font-mono fill-amber-400" font-size="9">shockwave</text>
+        <text x="306" y="214" class="font-mono fill-data-3" font-size="9">shockwave</text>
       </g>
     </svg>
   </figure>

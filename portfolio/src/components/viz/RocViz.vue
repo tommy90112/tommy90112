@@ -13,6 +13,7 @@
  */
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { VIZ } from '@/components/viz/palette'
 
 const { locale } = useI18n()
 
@@ -31,9 +32,11 @@ interface Model {
 }
 
 const MODELS: readonly Model[] = [
-  { id: 'gam', label: 'GAM', separation: 0.86, strengthKey: 'gam', colour: '#F5B841' },
-  { id: 'rf', label: 'Random Forest', separation: 0.81, strengthKey: 'rf', colour: '#7C6AFF' },
-  { id: 'xgb', label: 'XGBoost', separation: 0.835, strengthKey: 'xgb', colour: '#B6A9FF' },
+  // Three distinct hues rather than three tints of one: the curves overlap for
+  // most of their length, and lightness alone doesn't separate them there.
+  { id: 'gam', label: 'GAM', separation: 0.86, strengthKey: 'gam', colour: VIZ.accent },
+  { id: 'rf', label: 'Random Forest', separation: 0.81, strengthKey: 'rf', colour: VIZ.series },
+  { id: 'xgb', label: 'XGBoost', separation: 0.835, strengthKey: 'xgb', colour: VIZ.signal },
 ]
 
 /** Documented strengths, straight from the study's own conclusions. */
@@ -125,7 +128,7 @@ function opacityFor(id: string): number {
       aria-label="Schematic ROC comparison of GAM, Random Forest and XGBoost stroke prediction models."
     >
       <!-- Grid -->
-      <g stroke="#18202F" stroke-width="1">
+      <g :style="{ stroke: VIZ.grid }" stroke-width="1">
         <line
           v-for="i in 4"
           :key="`v${i}`"
@@ -150,7 +153,7 @@ function opacityFor(id: string): number {
         :y1="PAD.top + plotH"
         :x2="PAD.left + plotW"
         :y2="PAD.top"
-        stroke="#2E3A50"
+        :style="{ stroke: VIZ.axis }"
         stroke-width="1"
         stroke-dasharray="4 4"
       />
@@ -161,19 +164,19 @@ function opacityFor(id: string): number {
           v-for="curve in curves"
           :key="curve.id"
           :d="curve.d"
-          :stroke="curve.colour"
+          :style="{ stroke: curve.colour }"
           :opacity="opacityFor(curve.id)"
           class="transition-opacity duration-300"
         />
       </g>
 
       <!-- Axes -->
-      <g stroke="#2E3A50" stroke-width="1">
+      <g :style="{ stroke: VIZ.axis }" stroke-width="1">
         <line :x1="PAD.left" :y1="PAD.top" :x2="PAD.left" :y2="PAD.top + plotH" />
         <line :x1="PAD.left" :y1="PAD.top + plotH" :x2="PAD.left + plotW" :y2="PAD.top + plotH" />
       </g>
 
-      <g class="font-mono fill-paper-500" font-size="9">
+      <g class="font-mono fill-fg-faint" font-size="9">
         <text :x="PAD.left - 8" :y="PAD.top + 8" text-anchor="end">1.0</text>
         <text :x="PAD.left - 8" :y="PAD.top + plotH" text-anchor="end">0</text>
         <text :x="PAD.left" :y="PAD.top + plotH + 16" text-anchor="start">FPR</text>
@@ -186,7 +189,7 @@ function opacityFor(id: string): number {
       <li v-for="model in MODELS" :key="model.id">
         <button
           type="button"
-          class="flex items-center gap-2 font-mono text-[11px] text-paper-400 hover:text-paper-100 transition-colors"
+          class="flex items-center gap-2 font-mono text-[11px] text-fg-muted hover:text-fg transition-colors"
           @mouseenter="active = model.id"
           @mouseleave="active = null"
           @focus="active = model.id"
@@ -194,12 +197,12 @@ function opacityFor(id: string): number {
         >
           <span class="w-3 h-0.5 rounded-full" :style="{ backgroundColor: model.colour }"></span>
           {{ model.label }}
-          <span class="text-paper-500">{{ strengthFor(model) }}</span>
+          <span class="text-fg-faint">{{ strengthFor(model) }}</span>
         </button>
       </li>
     </ul>
 
-    <p class="mt-2 font-mono text-[10px] text-paper-500">
+    <p class="mt-2 font-mono text-[10px] text-fg-faint">
       {{ isZh ? '示意圖，非實測曲線' : 'Schematic — not measured curves' }}
     </p>
   </figure>

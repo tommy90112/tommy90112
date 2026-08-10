@@ -11,6 +11,7 @@
  */
 import { onMounted, onUnmounted, ref } from 'vue'
 import { usePrefersReducedMotion } from '@/composables/usePrefersReducedMotion'
+import { useThemeChannels } from '@/composables/useTheme'
 
 const props = withDefaults(
   defineProps<{
@@ -20,16 +21,20 @@ const props = withDefaults(
     maxParticles?: number
     /** Max px distance at which two particles are linked. */
     linkDistance?: number
-    /** Base dot + link colour, as `r, g, b`. */
-    rgb?: string
   }>(),
   {
     density: 9,
     maxParticles: 110,
     linkDistance: 132,
-    rgb: '124, 106, 255',
   },
 )
+
+/**
+ * Canvas can't reference a CSS variable, so the accent is sampled and
+ * re-sampled on theme change. The fallback is the dark theme's accent, which is
+ * only ever seen if the stylesheet failed to load.
+ */
+const accent = useThemeChannels('accent', '232, 116, 78')
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const prefersReduced = usePrefersReducedMotion()
@@ -135,7 +140,7 @@ function draw(): void {
       if (distSq > maxDist * maxDist) continue
 
       const alpha = (1 - Math.sqrt(distSq) / maxDist) * 0.22
-      ctx.strokeStyle = `rgba(${props.rgb}, ${alpha})`
+      ctx.strokeStyle = `rgba(${accent.value}, ${alpha})`
       ctx.lineWidth = 0.6
       ctx.beginPath()
       ctx.moveTo(a.x, a.y)
@@ -145,7 +150,7 @@ function draw(): void {
   }
 
   for (const p of particles) {
-    ctx.fillStyle = `rgba(${props.rgb}, 0.55)`
+    ctx.fillStyle = `rgba(${accent.value}, 0.5)`
     ctx.beginPath()
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
     ctx.fill()

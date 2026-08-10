@@ -1,4 +1,16 @@
 <script setup lang="ts">
+/**
+ * Hero.
+ *
+ * Left-aligned and asymmetric rather than centred: a centred stack of
+ * badge → headline → paragraph → two buttons is the most recognisable
+ * generated-landing-page shape there is, and it reads worse besides — every
+ * line starts at a different x, so the eye has no rag to follow.
+ *
+ * The headline runs across the first eight columns, the standfirst is held to
+ * a ~68-character measure, and the figure row below splits 8/4 so it never
+ * resolves into halves.
+ */
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { HERO_STATS } from '@/data/site'
@@ -8,7 +20,6 @@ import ParticleField from '@/components/fx/ParticleField.vue'
 import SplitText from '@/components/fx/SplitText.vue'
 import CountUp from '@/components/fx/CountUp.vue'
 import TiltedCard from '@/components/fx/TiltedCard.vue'
-import SpotlightCard from '@/components/fx/SpotlightCard.vue'
 import Magnet from '@/components/fx/Magnet.vue'
 
 const { t, locale } = useI18n()
@@ -21,100 +32,103 @@ function scrollTo(id: string): void {
 </script>
 
 <template>
-  <section id="top" class="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
-    <!-- Layered background: aurora fields, particle lattice, dot grid -->
-    <AuroraBackground :intensity="0.9" />
-    <ParticleField class="opacity-70" />
-    <div class="absolute inset-0 dot-bg pointer-events-none" aria-hidden="true"></div>
+  <section id="top" class="relative overflow-hidden pt-28 pb-16 md:pt-36 md:pb-24">
+    <AuroraBackground :intensity="0.85" />
+    <ParticleField class="opacity-60" />
+    <div class="absolute inset-0 grid-bg pointer-events-none" aria-hidden="true"></div>
 
     <div class="container-x relative">
-      <!-- Centred headline block -->
-      <div class="flex flex-col items-center text-center">
-        <p class="badge mb-8 animate-fade-up">
-          <span class="badge-dot" aria-hidden="true"></span>
-          {{ t('hero.tag') }}
-        </p>
-
-        <h1 class="h-display text-display-2xl mb-8 text-balance max-w-5xl">
-          <SplitText :text="t('hero.headline1')" trigger="mount" :stagger="30" />
-          <br />
-          <SplitText :text="t('hero.headline2')" trigger="mount" :stagger="30" :delay="180" />
-          <!--
-            Animates as one block rather than per-glyph: `background-clip: text`
-            has to sit on the element that owns the text, and SplitText's
-            per-token spans would each clip their own copy of the gradient.
-            Chinese has no true italic; faux-oblique CJK reads as a rendering bug.
-          -->
-          <em
-            class="inline-block text-gradient animate-fade-up
-                   bg-[linear-gradient(100deg,#B6A9FF,#7C6AFF_40%,#48D3E8)]"
-            :class="isZh ? 'not-italic' : 'ml-[0.22em]'"
-            style="animation-delay: 380ms"
-          >
-            {{ t('hero.headlineEm') }}
-          </em>
-        </h1>
-
-        <p
-          class="font-mono text-xs md:text-sm text-paper-400 mb-7 animate-fade-up"
-          style="animation-delay: 520ms"
-        >
-          {{ t('hero.subline') }}
-        </p>
-
-        <p
-          class="text-base md:text-lg text-paper-300 max-w-2xl leading-relaxed mb-11 text-pretty
-                 animate-fade-up"
-          style="animation-delay: 600ms"
-        >
-          {{ t('hero.description') }}
-        </p>
-
-        <div class="flex flex-wrap justify-center gap-4 animate-fade-up" style="animation-delay: 680ms">
-          <Magnet :radius="120" :strength="0.28">
-            <button type="button" class="btn-primary" @click="scrollTo('work')">
-              {{ t('hero.ctaWork') }}
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </button>
-          </Magnet>
-
-          <Magnet :radius="120" :strength="0.28">
-            <button type="button" class="btn-ghost" @click="scrollTo('contact')">
-              {{ t('hero.ctaContact') }}
-            </button>
-          </Magnet>
-        </div>
+      <!-- Standing head: a department label sitting on a rule. -->
+      <div class="flex items-center gap-3.5 animate-fade-up">
+        <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse-soft shrink-0" aria-hidden="true"></span>
+        <p class="eyebrow m-0">{{ t('hero.tag') }}</p>
+        <span class="rule-fill" aria-hidden="true"></span>
       </div>
 
-      <!-- Bento: signature visual beside a stacked stat block -->
-      <div class="bento mt-20 md:mt-24 animate-fade-up" style="animation-delay: 760ms">
-        <TiltedCard class="bento-wide p-5 md:p-8" :max-tilt="8" :depth="26">
-          <CausalViz />
-          <p class="mt-5 font-mono text-[11px] leading-relaxed text-paper-500">
-            {{ t('hero.vizCaption') }}
+      <h1 class="h-display text-display-2xl m-0 mt-8 md:mt-12 text-balance max-w-[16ch] md:max-w-[18ch]">
+        <SplitText :text="t('hero.headline1')" trigger="mount" :stagger="26" />
+        <br />
+        <SplitText :text="t('hero.headline2')" trigger="mount" :stagger="26" :delay="170" />
+        <!--
+          Set as one element rather than per-glyph: the accent colour and the
+          italic belong to the phrase, and SplitText's per-token spans would
+          break the shared baseline of an italic Fraunces run.
+          Chinese has no true italic; faux-oblique CJK reads as a rendering bug.
+        -->
+        <em
+          class="inline-block text-accent animate-fade-up"
+          :class="isZh ? 'not-italic' : 'ml-[0.16em]'"
+          style="animation-delay: 360ms"
+        >
+          {{ t('hero.headlineEm') }}
+        </em>
+      </h1>
+
+      <div class="grid-12 mt-10 md:mt-14">
+        <div class="col-major">
+          <p
+            class="text-base md:text-[17px] text-fg-muted leading-relaxed max-w-prose text-pretty
+                   m-0 animate-fade-up"
+            style="animation-delay: 520ms"
+          >
+            {{ t('hero.description') }}
           </p>
+
+          <!-- One filled action, then a text-weight one. Two buttons of nearly
+               equal weight leave neither reading as the primary path. -->
+          <div
+            class="flex flex-wrap items-center gap-x-8 gap-y-5 mt-9 animate-fade-up"
+            style="animation-delay: 620ms"
+          >
+            <Magnet :radius="110" :strength="0.24">
+              <button type="button" class="btn-primary" @click="scrollTo('work')">
+                {{ t('hero.ctaWork') }}
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </button>
+            </Magnet>
+
+            <button type="button" class="btn-text" @click="scrollTo('contact')">
+              {{ t('hero.ctaContact') }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Dateline rail — the metadata a paper hangs under its title block. -->
+        <aside
+          class="col-rail md:pl-8 md:border-l md:border-line animate-fade-up"
+          style="animation-delay: 700ms"
+        >
+          <p class="font-mono text-[11px] leading-relaxed text-fg-faint m-0">
+            {{ t('hero.subline') }}
+          </p>
+        </aside>
+      </div>
+
+      <!-- Figure, with the headline numbers set on a rail beside it. -->
+      <div class="grid-12 mt-16 md:mt-24 animate-fade-up" style="animation-delay: 780ms">
+        <TiltedCard as="figure" class="col-wide p-5 md:p-8 m-0" :max-tilt="4" :depth="18">
+          <CausalViz />
+          <figcaption
+            class="mt-6 pt-5 border-t border-line font-mono text-[11px] leading-relaxed text-fg-faint"
+          >
+            {{ t('hero.vizCaption') }}
+          </figcaption>
         </TiltedCard>
 
-        <dl class="bento-narrow grid grid-cols-3 md:grid-cols-1 gap-3 md:gap-5 m-0">
-          <SpotlightCard
-            v-for="(stat, i) in HERO_STATS"
-            :key="stat.key"
-            class="p-5 flex flex-col justify-center"
-            :rgb="i % 2 === 0 ? '124, 106, 255' : '245, 184, 65'"
-            :radius="220"
-          >
-            <dt class="sr-only">{{ t(`${stat.key}.label`) }}</dt>
-            <dd class="m-0">
-              <span class="block h-display text-3xl md:text-4xl text-paper-50">
-                <CountUp :value="t(`${stat.key}.value`)" :delay="i * 110" />
-              </span>
-              <span class="block mt-2 font-mono text-[11px] leading-snug text-paper-500">
-                {{ t(`${stat.key}.label`) }}
-              </span>
+        <dl
+          class="col-rail m-0 flex flex-col justify-end divide-y divide-line
+                 border-t border-b border-line md:border-t-0"
+        >
+          <div v-for="(stat, i) in HERO_STATS" :key="stat.key" class="py-5 md:py-6">
+            <dt class="font-mono text-[10.5px] tracking-[0.14em] uppercase text-fg-faint m-0">
+              {{ t(`${stat.key}.label`) }}
+            </dt>
+            <dd class="stat-value mt-2 m-0">
+              <CountUp :value="t(`${stat.key}.value`)" :delay="i * 110" />
             </dd>
-          </SpotlightCard>
+          </div>
         </dl>
       </div>
     </div>

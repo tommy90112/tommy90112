@@ -68,6 +68,7 @@ const messages: Messages<typeof en> = {
     eyebrow: '經歷',
     title: '我待過的地方。',
     note: '起迄年月待補——請見原始碼中的 TODO。',
+    currentLabel: '目前在職',
     items: {
       cathay: {
         org: '國泰人壽保險股份有限公司',
@@ -255,10 +256,18 @@ const messages: Messages<typeof en> = {
     built: '以 Vue、Vite 與 Tailwind 建置。原始碼在 GitHub。',
     // TODO: 換成你的中文姓名。GitHub 上只有羅馬拼音 YUHUNG,SHIH，我不猜漢字。
     rights: 'Yu-Hung Shih',
+    privacy: '無流量分析、無 Cookie、無追蹤。',
+  },
+
+  theme: {
+    auto: '自動',
+    light: '亮色',
+    dark: '暗色',
   },
 
   a11y: {
     toggleLanguage: '切換語言',
+    toggleTheme: '色彩主題',
     openMenu: '開啟導覽選單',
     closeMenu: '關閉導覽選單',
     backToTop: '回到頂端',

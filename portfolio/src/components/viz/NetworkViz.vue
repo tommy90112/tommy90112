@@ -11,6 +11,7 @@
  * picture stays legible at card size.
  */
 import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { VIZ } from '@/components/viz/palette'
 
 interface Account {
   id: number
@@ -95,11 +96,11 @@ function heat(account: Account): number {
 }
 
 function fillFor(account: Account): string {
-  if (account.toxic) return '#F5B841'
+  if (account.toxic) return VIZ.signal
   const h = heat(account)
-  if (h > 0.45) return '#9585FF'
-  if (h > 0) return '#4C3CC4'
-  return '#2E3A50'
+  if (h > 0.45) return VIZ.accentSoft
+  if (h > 0) return VIZ.accent
+  return VIZ.axis
 }
 </script>
 
@@ -112,7 +113,7 @@ function fillFor(account: Account): string {
       aria-label="Transaction network where blacklist density propagates from seeded accounts to their shared-wallet neighbours."
     >
       <!-- Links -->
-      <g stroke="#212B3D" stroke-width="1.1" fill="none">
+      <g :style="{ stroke: VIZ.grid }" stroke-width="1.1" fill="none">
         <line
           v-for="link in LINKS"
           :key="`${link.a}-${link.b}`"
@@ -131,7 +132,7 @@ function fillFor(account: Account): string {
           :cx="account.x"
           :cy="account.y"
           :r="account.r + 10 + heat(account) * 12"
-          :fill="account.toxic ? '#F5B841' : '#7C6AFF'"
+          :style="{ fill: account.toxic ? VIZ.signal : VIZ.accent }"
           :opacity="heat(account) * 0.18"
         />
       </g>
@@ -144,18 +145,17 @@ function fillFor(account: Account): string {
           :cx="account.x"
           :cy="account.y"
           :r="account.r"
-          :fill="fillFor(account)"
-          stroke="#0B1019"
+          :style="{ fill: fillFor(account), stroke: VIZ.ground }"
           stroke-width="1.5"
         />
       </g>
 
       <!-- Legend -->
       <g class="font-mono" font-size="9">
-        <circle cx="14" cy="284" r="4.5" fill="#F5B841" />
-        <text x="24" y="287" class="fill-paper-400">blacklisted</text>
-        <circle cx="110" cy="284" r="4.5" fill="#9585FF" />
-        <text x="120" y="287" class="fill-paper-400">high LOO density</text>
+        <circle cx="14" cy="284" r="4.5" :style="{ fill: VIZ.signal }" />
+        <text x="24" y="287" class="fill-fg-muted">blacklisted</text>
+        <circle cx="110" cy="284" r="4.5" :style="{ fill: VIZ.accentSoft }" />
+        <text x="120" y="287" class="fill-fg-muted">high LOO density</text>
       </g>
     </svg>
   </figure>
