@@ -11,6 +11,35 @@ export const CONTACT = {
 } as const
 
 /**
+ * Job-search state — one switch for the whole site.
+ *
+ * Flip `openToWork` to false once a role is signed and every open-to-work
+ * surface disappears at once. (The profile README is a separate file and has
+ * to be edited by hand.)
+ */
+export const AVAILABILITY = {
+  openToWork: true,
+  /**
+   * First day available, ISO. Rather than going stale, this flips its own
+   * wording: before the date the page offers it, on or after it the page says
+   * "available immediately". Nothing here needs updating on a deadline.
+   */
+  availableFrom: '2026-09-01',
+} as const
+
+/** True once `availableFrom` has arrived. */
+export function isAvailableNow(now: Date = new Date()): boolean {
+  return now >= new Date(AVAILABILITY.availableFrom)
+}
+
+/** `availableFrom` as "September 2026" / "2026年9月", per locale. */
+export function formatAvailableFrom(locale: string): string {
+  return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long' }).format(
+    new Date(AVAILABILITY.availableFrom),
+  )
+}
+
+/**
  * Sections in reading order. `icon` is an SVG path `d` on a 24×24 stroked
  * grid, used by the Dock; the text label always comes from `key`.
  */
@@ -61,10 +90,30 @@ export const HERO_STATS = [
 export type VizKind = 'causal' | 'attribution' | 'network' | 'shockwave' | 'roc' | null
 
 /**
- * Width of the card in the 6-column bento bed.
- * `full` spans the row; `half` pairs two cards side by side.
+ * Authored width of the card in the 12-column bed.
+ * `full` spans the row; `half` pairs two cards side by side. The rendered
+ * width can differ — filtering promotes a stranded `half` to a full row.
  */
-export type BentoSpan = 'full' | 'half'
+export type ProjectSpan = 'full' | 'half'
+
+/**
+ * Problem domain, used to filter the work section.
+ *
+ * Deliberately about the *problem*, not the technique: someone hiring for a
+ * fraud role is looking for fraud work, and does not care whether it was solved
+ * with a graph transformer or a gradient boost. A project can sit in more than
+ * one — most real work does.
+ */
+export type ProjectDomain = 'causal' | 'fraud' | 'forecasting' | 'modelling' | 'visualization'
+
+/** Filter order. Not alphabetical — most central to the thesis first. */
+export const PROJECT_DOMAINS: readonly ProjectDomain[] = [
+  'causal',
+  'fraud',
+  'forecasting',
+  'modelling',
+  'visualization',
+] as const
 
 export interface Project {
   /** i18n key under `projects.items`. */
@@ -76,8 +125,10 @@ export interface Project {
   viz: VizKind
   /** Thesis work gets a distinct badge and the leading slot. */
   featured: boolean
-  /** Bento footprint. Order + span together define the grid rhythm. */
-  span: BentoSpan
+  /** Grid footprint. Order + span together define the rhythm. */
+  span: ProjectSpan
+  /** Problem domains this project belongs to; at least one. */
+  domains: readonly ProjectDomain[]
 }
 
 export const PROJECTS: readonly Project[] = [
@@ -89,6 +140,7 @@ export const PROJECTS: readonly Project[] = [
     viz: 'attribution',
     featured: true,
     span: 'full',
+    domains: ['causal'],
   },
   {
     id: 'bitoguard',
@@ -98,6 +150,7 @@ export const PROJECTS: readonly Project[] = [
     viz: 'network',
     featured: true,
     span: 'half',
+    domains: ['fraud', 'modelling'],
   },
   {
     id: 'highway',
@@ -107,6 +160,7 @@ export const PROJECTS: readonly Project[] = [
     viz: 'shockwave',
     featured: false,
     span: 'half',
+    domains: ['forecasting', 'modelling'],
   },
   {
     id: 'stroke',
@@ -116,6 +170,7 @@ export const PROJECTS: readonly Project[] = [
     viz: 'roc',
     featured: false,
     span: 'half',
+    domains: ['modelling'],
   },
   {
     id: 'cyberviz',
@@ -125,6 +180,7 @@ export const PROJECTS: readonly Project[] = [
     viz: null,
     featured: false,
     span: 'half',
+    domains: ['visualization'],
   },
   {
     id: 'mva',
@@ -134,6 +190,7 @@ export const PROJECTS: readonly Project[] = [
     viz: null,
     featured: false,
     span: 'full',
+    domains: ['modelling', 'visualization'],
   },
 ] as const
 
@@ -141,8 +198,6 @@ export interface SkillGroup {
   /** i18n key under `skills.groups`. */
   id: 'languages' | 'ml' | 'web' | 'methods'
   items: readonly string[]
-  /** Columns out of 6 in the bento bed — wider groups get more room. */
-  span: 2 | 3 | 4
   /** SVG path `d` on a 24×24 stroked grid. */
   icon: string
 }
@@ -150,13 +205,11 @@ export interface SkillGroup {
 export const SKILL_GROUPS: readonly SkillGroup[] = [
   {
     id: 'languages',
-    span: 2,
     icon: 'M9 18l-5-6 5-6M15 6l5 6-5 6',
     items: ['Python', 'R', 'SQL', 'TypeScript', 'JavaScript', 'Java'],
   },
   {
     id: 'ml',
-    span: 4,
     icon: 'M12 3v4m0 10v4M3 12h4m10 0h4M6.3 6.3l2.9 2.9m5.6 5.6l2.9 2.9m0-11.4l-2.9 2.9m-5.6 5.6l-2.9 2.9',
     items: [
       'PyTorch',
@@ -171,13 +224,11 @@ export const SKILL_GROUPS: readonly SkillGroup[] = [
   },
   {
     id: 'web',
-    span: 2,
     icon: 'M3 12h18M12 3a15 15 0 010 18M12 3a15 15 0 000 18M3 12a9 9 0 1118 0 9 9 0 01-18 0z',
     items: ['Vue', 'React', 'Next.js', 'three.js', 'JSP', 'FastAPI', 'Flask', 'PostgreSQL', 'AWS'],
   },
   {
     id: 'methods',
-    span: 4,
     icon: 'M5 19V5m0 14h14M9 15V9m4 6V6m4 9v-4',
     items: [
       'Causal inference (SCM / do-calculus)',
@@ -269,8 +320,6 @@ export interface AwardEntry {
   id: 'highway' | 'mva' | 'hackathon'
   icon: 'trophy' | 'flag' | 'poster'
   link: string | null
-  /** Columns out of 6 in the bento bed. Three entries tile across one row at span 2. */
-  span: 2 | 3
 }
 
 /** Most recent first. */
@@ -279,18 +328,15 @@ export const AWARDS: readonly AwardEntry[] = [
     id: 'hackathon',
     icon: 'flag',
     link: 'https://github.com/tommy90112/Bito_AWS_Workshop',
-    span: 2,
   },
   {
     id: 'highway',
     icon: 'trophy',
     link: 'https://github.com/tommy90112/Highway_trafficwave',
-    span: 2,
   },
   {
     id: 'mva',
     icon: 'poster',
     link: 'https://github.com/tommy90112/MVA-Internet-use-and-bullying',
-    span: 2,
   },
 ] as const

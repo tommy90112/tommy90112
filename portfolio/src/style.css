@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 /* ===========================================================================
-   Design tokens
+   Design tokens — International Typographic Style
    ---------------------------------------------------------------------------
    Two palettes, one set of names. Values are bare `R G B` channels so Tailwind
    can compose them with an alpha (`rgb(var(--fg) / 0.6)`).
 
-   Both themes are built on a warm neutral axis (hue ~30°) rather than the blue
-   greys that dark UIs default to, and carry a single terracotta accent. The
-   warmth is what keeps a research portfolio from reading as another dark-mode
-   SaaS dashboard.
+   The neutral ramp is genuinely neutral — equal channels, no hue — because the
+   Swiss school treats colour as information, not atmosphere. Exactly one
+   chromatic value exists in the system, and it means "this matters": the
+   accent red. Anything that is not data and not the accent is greyscale.
 
    Theme resolution, in order:
      1. `[data-theme="light"]` / `[data-theme="dark"]` — explicit user choice
@@ -21,111 +21,89 @@
 
 @layer base {
   :root {
-    /* ---- Ground: warm paper -------------------------------------------- */
-    --bg: 250 248 244; /* #FAF8F4 */
-    --bg-sunk: 243 239 231; /* #F3EFE7 — recessed band */
-    --surface: 255 254 251; /* #FFFEFB — raised panel */
-    --surface-raised: 246 242 234; /* #F6F2EA — inset / filled cell */
+    /* ---- Ground --------------------------------------------------------- */
+    --bg: 247 247 245; /* #F7F7F5 — paper, not #FFF: pure white clips highlights */
+    --bg-sunk: 240 240 237; /* #F0F0ED — recessed band */
+    --surface: 255 255 255; /* #FFFFFF — a panel is the brightest thing here */
+    --surface-raised: 237 237 234; /* #EDEDEA — inset / filled cell */
 
-    /* ---- Rules ---------------------------------------------------------- */
-    --line: 225 217 205; /* #E1D9CD — hairline */
-    --line-strong: 199 188 172; /* #C7BCAC — emphasised divider */
+    /* ---- Rules ----------------------------------------------------------
+       Two weights only. In this style the rule is a structural element, so it
+       has to be visible — hairlines at 6% opacity are a different aesthetic. */
+    --line: 214 214 210; /* #D6D6D2 */
+    --line-strong: 17 17 17; /* the full-strength rule: ink on paper */
 
     /* ---- Foreground ----------------------------------------------------- */
-    --fg: 26 22 18; /* #1A1612 — 15.9:1 on --bg */
-    --fg-muted: 74 66 57; /* #4A4239 — 9.3:1 */
-    --fg-faint: 118 108 96; /* #766C60 —  4.9:1, the floor for 11px mono */
+    --fg: 17 17 17; /* #111111 — 17.4:1 on --bg */
+    --fg-muted: 90 90 88; /* #5A5A58 —  7.1:1 */
+    --fg-faint: 122 122 119; /* #7A7A77 —  4.6:1, the floor for 11px mono */
 
-    /* ---- Accent: terracotta --------------------------------------------- */
-    --accent: 172 58 34; /* #AC3A22 — 6.4:1 on --bg */
-    --accent-soft: 196 84 56; /* #C45438 — decorative rules, hover fills */
-    --accent-on: 255 250 246; /* text on a filled accent surface */
+    /* ---- Accent: signal red ---------------------------------------------
+       One chromatic value in the entire interface. */
+    --accent: 214 38 15; /* #D6260F — 5.5:1 on --bg */
+    --accent-soft: 235 62 36; /* #EB3E24 — hover only, never text on --bg */
+    --accent-on: 255 255 255;
 
     /* ---- Data series ----------------------------------------------------
-       Only for charts, where one hue cannot encode two categories. Chosen to
-       stay distinguishable under deuteranopia: the accent is long-wavelength,
-       data-2 is a desaturated green-cyan, data-3 is a dark ochre. */
-    --data-2: 42 106 96; /* #2A6A60 */
-    --data-3: 141 110 46; /* #8D6E2E */
+       Charts are the one place a second and third hue are permitted, because
+       one hue cannot encode three categories. Chosen to stay separable under
+       deuteranopia: long-wavelength red, blue, and a dark neutral. */
+    --data-2: 20 84 166; /* #1454A6 */
+    --data-3: 92 92 90; /* #5C5C5A */
 
-    /* Shadow hue — carries the ground's warmth instead of neutral black. */
-    --shadow: 62 48 34;
-
-    /* Ambient light fields (PageBackdrop / Aurora) and grain, per theme. */
-    --wash-a: 172 58 34;
-    --wash-b: 42 106 96;
-    --wash-c: 190 150 90;
-    --wash-alpha: 0.1;
-    --grain-alpha: 0.03;
-    --grain-blend: multiply;
+    --shadow: 0 0 0;
 
     color-scheme: light;
   }
 
-  /* System preference, only while the user hasn't chosen explicitly. */
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme='light']) {
-      --bg: 18 16 14; /* #12100E — warm charcoal, never #000 */
-      --bg-sunk: 13 12 10; /* #0D0C0A */
-      --surface: 28 25 21; /* #1C1915 */
-      --surface-raised: 38 34 29; /* #26221D */
+      --bg: 13 13 13; /* #0D0D0D — off-black, never #000 */
+      --bg-sunk: 8 8 8;
+      --surface: 23 23 23; /* #171717 */
+      --surface-raised: 33 33 33; /* #212121 */
 
-      --line: 54 48 41; /* #363029 */
-      --line-strong: 82 73 62; /* #52493E */
+      --line: 56 56 56; /* #383838 */
+      --line-strong: 242 242 240;
 
-      --fg: 242 236 227; /* #F2ECE3 — 15.2:1 on --bg */
-      --fg-muted: 186 176 163; /* #BAB0A3 — 8.6:1 */
-      --fg-faint: 143 133 120; /* #8F8578 — 5.0:1 */
+      --fg: 242 242 240; /* #F2F2F0 — 16.6:1 on --bg */
+      --fg-muted: 168 168 165; /* #A8A8A5 —  8.2:1 */
+      --fg-faint: 128 128 125; /* #80807D —  4.8:1 */
 
-      --accent: 232 116 78; /* #E8744E — 7.1:1 on --bg */
-      --accent-soft: 245 152 118; /* #F59876 */
-      --accent-on: 26 16 11;
+      --accent: 255 74 46; /* #FF4A2E — 6.5:1 on --bg */
+      --accent-soft: 255 116 94;
+      --accent-on: 13 13 13;
 
-      --data-2: 110 178 160; /* #6EB2A0 */
-      --data-3: 213 176 106; /* #D5B06A */
+      --data-2: 92 158 255; /* #5C9EFF */
+      --data-3: 160 160 157;
 
       --shadow: 0 0 0;
-
-      --wash-a: 232 116 78;
-      --wash-b: 78 150 138;
-      --wash-c: 190 150 90;
-      --wash-alpha: 0.16;
-      --grain-alpha: 0.045;
-      --grain-blend: overlay;
 
       color-scheme: dark;
     }
   }
 
-  /* Explicit choice wins over the media query in both directions. */
   :root[data-theme='dark'] {
-    --bg: 18 16 14;
-    --bg-sunk: 13 12 10;
-    --surface: 28 25 21;
-    --surface-raised: 38 34 29;
+    --bg: 13 13 13;
+    --bg-sunk: 8 8 8;
+    --surface: 23 23 23;
+    --surface-raised: 33 33 33;
 
-    --line: 54 48 41;
-    --line-strong: 82 73 62;
+    --line: 56 56 56;
+    --line-strong: 242 242 240;
 
-    --fg: 242 236 227;
-    --fg-muted: 186 176 163;
-    --fg-faint: 143 133 120;
+    --fg: 242 242 240;
+    --fg-muted: 168 168 165;
+    --fg-faint: 128 128 125;
 
-    --accent: 232 116 78;
-    --accent-soft: 245 152 118;
-    --accent-on: 26 16 11;
+    --accent: 255 74 46;
+    --accent-soft: 255 116 94;
+    --accent-on: 13 13 13;
 
-    --data-2: 110 178 160;
-    --data-3: 213 176 106;
+    --data-2: 92 158 255;
+    --data-3: 160 160 157;
 
     --shadow: 0 0 0;
-
-    --wash-a: 232 116 78;
-    --wash-b: 78 150 138;
-    --wash-c: 190 150 90;
-    --wash-alpha: 0.16;
-    --grain-alpha: 0.045;
-    --grain-blend: overlay;
 
     color-scheme: dark;
   }
@@ -134,24 +112,18 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Anchored sections clear the fixed header. */
-    scroll-padding-top: 6rem;
+    scroll-padding-top: 5.5rem;
   }
 
   body {
     @apply bg-page text-fg-muted font-sans antialiased;
-    /* Geist ships contextual alternates and proper tabular figures; both are
-       off by default. */
-    font-feature-settings: 'cv11', 'ss01';
   }
 
-  /* Theme swap is a colour change, not a repaint the user should watch — but
-     it must not become a global transition that fights every hover state. */
   html.theme-transition,
   html.theme-transition body {
     transition:
-      background-color 0.35s ease,
-      color 0.35s ease;
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -167,24 +139,18 @@
     }
   }
 
+  /* Selection is a solid block of accent, not a tint — this style does not do
+     translucency. */
   ::selection {
-    @apply bg-accent/25 text-fg;
+    @apply bg-accent text-accent-on;
   }
 
+  /* Square focus ring, matching the square everything else. */
   :focus-visible {
-    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-page rounded-inner;
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-page rounded-none;
   }
 
-  /* Display type: Fraunces' optical-size axis, plus a touch of its `SOFT` axis
-     so the serifs stay warm rather than needle-sharp at large sizes. */
-  .font-display {
-    font-variation-settings:
-      'SOFT' 20,
-      'WONK' 1,
-      'opsz' 88;
-  }
-
-  /* Numerals in data contexts must line up column to column. */
+  /* Figures line up column to column wherever numbers are compared. */
   .font-mono,
   .tabular-nums {
     font-variant-numeric: tabular-nums;
@@ -192,166 +158,178 @@
 }
 
 @layer components {
-  /* ---- Shell ------------------------------------------------------------- */
+  /* ---- Shell -------------------------------------------------------------
+     One measure, one gutter, everywhere. The container never changes width
+     between sections — in this style the column edge is a visible constant
+     that every rule and every heading is aligned to. */
 
   .container-x {
-    @apply w-full max-w-content mx-auto px-5 sm:px-8 lg:px-12;
+    @apply w-full max-w-content mx-auto px-5 sm:px-8 lg:px-10;
   }
 
+  /* Vertical rhythm is a multiple of the 8px base unit at every breakpoint. */
   .section {
-    /* Optically asymmetric: the bottom needs more air than the top because the
-       following section's rule reads as a hard stop. */
-    @apply pt-20 pb-24 md:pt-28 md:pb-36;
+    @apply pt-16 pb-20 md:pt-24 md:pb-28;
   }
 
-  /* Sections are separated by a rule, not by a colour jump. */
   .section-ruled {
     @apply border-t border-line;
   }
 
-  /* ---- Editorial headers -------------------------------------------------
-     A numbered label above a rule, with the heading hung below it. Replaces
-     the centred eyebrow-pill; the number gives each section an index the way a
-     paper's sections are numbered. */
+  /* ---- Section headers ---------------------------------------------------
+     Number, label, and rule on one line; the heading directly beneath it, flush
+     left. No centring anywhere in the system. */
 
   .eyebrow {
-    @apply inline-flex items-baseline gap-3 font-mono text-[11px] tracking-[0.2em] uppercase text-accent;
+    @apply inline-flex items-baseline font-mono text-[11px] font-medium
+           tracking-[0.14em] uppercase text-accent;
   }
 
   .section-index {
-    @apply font-mono text-[11px] tabular-nums tracking-[0.2em] text-fg-faint;
+    @apply font-mono text-[11px] font-medium tabular-nums tracking-[0.14em] text-fg-faint;
   }
 
-  /* Hairline that spans the remaining width of a header row. */
   .rule-fill {
-    @apply h-px flex-1 bg-line origin-left;
+    @apply h-px flex-1 bg-line;
   }
 
+  /* Display type: one family, separated by weight and size rather than by
+     changing typeface. `wdth` is dialled in slightly narrow so the headline
+     packs tighter at display sizes without faking a condensed cut. */
   .h-display {
-    @apply font-display font-normal text-fg;
+    @apply font-sans font-extrabold text-fg;
+    font-variation-settings: 'wdth' 96;
   }
 
   /* ---- Surfaces ----------------------------------------------------------
-     Solid, not glass. A panel is `surface` over `page` with one hairline —
-     the depth comes from the lightness step and a warm-tinted shadow, which
-     survives a light theme where `backdrop-blur` on white is invisible.
-
-     `backdrop-blur` is kept only for genuinely floating chrome (header, dock),
-     where there is real content moving underneath to refract. */
+     Square corners, one rule, no shadow. Depth in this style comes from the
+     lightness step between `page` and `surface` and from the rule — not from
+     simulated elevation. */
 
   .panel {
-    @apply bg-surface border border-line rounded-panel shadow-panel;
+    @apply bg-surface border border-line;
   }
 
   .panel-hover {
-    @apply transition-[border-color,box-shadow,transform] duration-300 ease-out
-           hover:border-line-strong hover:shadow-lifted;
+    @apply transition-colors duration-200 hover:border-line-strong;
   }
 
-  /* Floating chrome — the only place blur earns its cost. */
+  /* Floating chrome. Opaque rather than blurred: a blur behind a rule makes
+     the rule read as soft, and every rule here is meant to be exact. */
   .chrome {
-    @apply bg-page/80 border border-line backdrop-blur-xl shadow-float;
+    @apply bg-page border-b border-line;
   }
 
   /* ---- Controls ----------------------------------------------------------- */
 
   .btn {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-inner text-sm font-medium
-           transition-[background-color,border-color,color,transform] duration-200
-           active:translate-y-px;
+    @apply inline-flex items-center justify-center gap-2 h-11 px-5 rounded-none
+           font-sans text-sm font-semibold tracking-tight
+           transition-colors duration-150;
   }
 
   .btn-primary {
     @apply btn bg-accent text-accent-on hover:bg-accent-soft;
   }
 
+  /* A rule-bordered button. Inverts to solid ink on hover, so the two buttons
+     are distinguished by weight rather than by one being an outline of the
+     other. */
   .btn-ghost {
-    @apply btn border border-line-strong text-fg hover:border-accent hover:text-accent;
+    @apply btn border border-line-strong text-fg
+           hover:bg-fg hover:text-page hover:border-fg;
   }
 
-  /* Third tier, so a section doesn't always resolve to one filled + one ghost
-     button. Reads as a link but hits like a control. */
   .btn-text {
-    @apply inline-flex items-center gap-2 text-sm font-medium text-fg
-           border-b border-line-strong pb-0.5
-           transition-colors duration-200 hover:text-accent hover:border-accent;
+    @apply inline-flex items-center gap-2 font-mono text-[11px] font-medium
+           uppercase tracking-[0.14em] text-fg
+           border-b border-line-strong pb-1
+           transition-colors duration-150 hover:text-accent hover:border-accent;
   }
 
-  /* Square-cornered, uppercase, hairline — a printed tag rather than a pill. */
+  /* Square, mono, uppercase — a specimen label. */
   .chip {
-    @apply inline-flex items-center px-2 py-1 rounded-[3px] border border-line
-           bg-surface-raised font-mono text-[10.5px] tracking-[0.06em] text-fg-muted
-           transition-colors duration-200 hover:border-accent/60 hover:text-fg;
+    @apply inline-flex items-center h-6 px-2 rounded-none border border-line
+           font-mono text-[10px] font-medium tracking-[0.06em] uppercase text-fg-muted
+           transition-colors duration-150;
+  }
+
+  .chip-active {
+    @apply bg-fg border-fg text-page;
   }
 
   .link-underline {
     @apply relative text-fg no-underline
-           after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-0 after:bg-accent
-           after:transition-[width] after:duration-300 hover:after:w-full;
+           after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-full after:bg-line-strong
+           after:origin-left after:scale-x-0 after:transition-transform after:duration-200
+           hover:after:scale-x-100;
   }
 
   /* ---- Grid --------------------------------------------------------------
-     A 12-column bed. The spans below are deliberately unequal (7/5, 8/4) so
-     rows don't resolve into the three-equal-cards shape. */
+     A 12-column modular bed. Spans are unequal by design; the Swiss grid is
+     asymmetric within a symmetric field. */
 
   .grid-12 {
-    @apply grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-5 md:gap-y-6;
+    @apply grid grid-cols-4 md:grid-cols-12 gap-x-4 md:gap-x-6 gap-y-4;
   }
 
   .col-major {
-    @apply md:col-span-7;
+    @apply col-span-4 md:col-span-7;
   }
   .col-minor {
-    @apply md:col-span-5;
+    @apply col-span-4 md:col-span-5;
   }
   .col-wide {
-    @apply md:col-span-8;
+    @apply col-span-4 md:col-span-8;
   }
   .col-rail {
-    @apply md:col-span-4;
+    @apply col-span-4 md:col-span-4;
   }
   .col-half {
-    @apply md:col-span-6;
+    @apply col-span-4 md:col-span-6;
   }
   .col-full {
-    @apply md:col-span-12;
+    @apply col-span-4 md:col-span-12;
   }
-
-  /* Label / body split for the ruled lists (experience, skills, awards). The
-     label column holds one short mono string, so a quarter of the width left a
-     gap wide enough to read as a missing column. */
   .col-label {
-    @apply md:col-span-3;
+    @apply col-span-4 md:col-span-3;
   }
   .col-body {
-    @apply md:col-span-9;
+    @apply col-span-4 md:col-span-9;
   }
 
-  /* Headline figures — set in the display face, at the size a pull-quote
-     would be, because they are the argument rather than a decoration. */
+  /* ---- Data ---------------------------------------------------------------
+     Figures are set large, in the same family as everything else, over a mono
+     label. This is the one place the page raises its voice. */
+
   .stat-value {
-    @apply block font-display text-3xl md:text-4xl text-fg tabular-nums;
+    @apply block font-sans font-extrabold text-fg tabular-nums leading-none
+           text-[clamp(28px,3.4vw,44px)];
+    font-variation-settings: 'wdth' 96;
+  }
+
+  .stat-label {
+    @apply block mt-2 font-mono text-[10px] font-medium uppercase tracking-[0.12em]
+           leading-snug text-fg-faint;
+    /* Tracked-out uppercase in a narrow column overflows by the width of the
+       trailing letter-space, which is a sub-pixel amount that still gives the
+       page a horizontal scrollbar. `anywhere` lets the label break rather than
+       push, and unlike `break-word` it also shrinks the min-content width, so
+       the grid column stops being sized by the longest unbreakable run. */
+    overflow-wrap: anywhere;
   }
 
   /* ---- Texture -----------------------------------------------------------
-     Faint ruled lattice, replacing the violet dot grid. Reads as graph paper
-     under the hero rather than as a generic tech backdrop. */
-
-  /* Grain overlay. Opacity and blend mode live here rather than inline because
-     `mix-blend-mode` takes a keyword, and a `var()` in that position is not
-     expressible in Vue's typed style object. */
-  .grain-overlay {
-    opacity: var(--grain-alpha);
-    mix-blend-mode: var(--grain-blend);
-  }
+     The grid itself, drawn faintly. Not decoration — it is the same module the
+     content sits on, made visible behind the masthead. */
 
   .grid-bg {
     background-image:
-      linear-gradient(to right, rgb(var(--line) / 0.55) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(var(--line) / 0.55) 1px, transparent 1px);
-    background-size: 72px 72px;
-    mask-image: radial-gradient(ellipse 74% 62% at 24% 34%, #000 5%, transparent 72%);
-    -webkit-mask-image: radial-gradient(ellipse 74% 62% at 24% 34%, #000 5%, transparent 72%);
+      linear-gradient(to right, rgb(var(--line) / 0.7) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--line) / 0.7) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: linear-gradient(to bottom, #000 0%, transparent 78%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 78%);
   }
 }
 
@@ -363,13 +341,14 @@
     text-wrap: pretty;
   }
 
-  /* Scroll-reveal: `is-visible` is set by the useReveal composable. */
+  /* Scroll-reveal: `is-visible` is set by the useReveal composable.
+     Opacity and a short rise only — no scale, no blur. */
   .reveal {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(12px);
     transition:
-      opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+      opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .reveal.is-visible {
     opacity: 1;

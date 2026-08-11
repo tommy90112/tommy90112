@@ -14,7 +14,6 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Reveal from '@/components/Reveal.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
-import SpotlightCard from '@/components/fx/SpotlightCard.vue'
 import { CERTIFICATIONS, type CertificationEntry } from '@/data/site'
 
 const { t } = useI18n()
@@ -59,7 +58,7 @@ function assetUrl(path: string): string {
       <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 list-none p-0 m-0">
         <li v-for="(cert, i) in CERTIFICATIONS" :key="cert.id">
           <Reveal :delay="100 + i * 60" class="h-full">
-            <SpotlightCard class="h-full">
+            <div class="h-full panel panel-hover">
               <component
                 :is="cert.link ? 'a' : 'div'"
                 :href="cert.link ?? undefined"
@@ -82,8 +81,8 @@ function assetUrl(path: string): string {
                 />
                 <span
                   v-else
-                  class="mb-6 grid place-items-center w-10 h-10 rounded-inner border border-line
-                         text-fg-faint transition-colors duration-300
+                  class="mb-6 grid place-items-center w-10 h-10 border border-line
+                         text-fg-faint transition-colors duration-150
                          group-hover/cert:border-accent group-hover/cert:text-accent"
                   aria-hidden="true"
                 >
@@ -103,13 +102,13 @@ function assetUrl(path: string): string {
                 <div class="mt-auto pt-4 border-t border-line flex items-center justify-between gap-3">
                   <!-- An empty `date` collapses to zero width; `justify-between`
                        then simply pins the verify link to the right. -->
-                  <span class="font-mono text-[10.5px] text-fg-faint tabular-nums">
+                  <span class="font-mono text-[10px] text-fg-faint tabular-nums">
                     {{ t(`certifications.items.${cert.id}.date`) }}
                   </span>
 
                   <span
                     v-if="cert.link"
-                    class="inline-flex items-center gap-1.5 font-mono text-[10.5px] text-fg-faint
+                    class="inline-flex items-center gap-1.5 font-mono text-[10px] text-fg-faint
                            transition-colors group-hover/cert:text-accent"
                   >
                     {{ t('certifications.verify') }}
@@ -119,7 +118,7 @@ function assetUrl(path: string): string {
                   </span>
                 </div>
               </component>
-            </SpotlightCard>
+            </div>
           </Reveal>
         </li>
       </ul>

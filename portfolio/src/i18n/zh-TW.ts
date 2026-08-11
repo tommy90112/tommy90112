@@ -34,7 +34,7 @@ const messages: Messages<typeof en> = {
     headlineEm: '因果推論',
     subline: '淡江大學統計與資料科學學系 數據科學碩士 · 台北',
     description:
-      '碩士論文 CI-RCT 做的是圖神經網路上的因果根因追溯；此外也做過詐欺偵測、交通預測與健康風險建模。',
+      '碩士論文 CI-RCT 做的是異質圖神經網路上的因果可解釋根因追溯；此外也做過詐欺偵測、交通預測與健康風險建模。',
     ctaWork: '查看作品',
     ctaContact: '聯絡我',
     scroll: '向下捲動',
@@ -43,7 +43,9 @@ const messages: Messages<typeof en> = {
 
   availability: {
     status: '開放新機會',
-    detail: '正在尋找資料科學／機器學習相關職缺——台北或遠端皆可。',
+    detail: '正在尋找資料科學、機器學習與軟體工程相關職缺——台北或遠端皆可。',
+    availableFrom: '{date}起可到職',
+    availableNow: '可立即到職',
   },
 
   stats: {
@@ -98,6 +100,17 @@ const messages: Messages<typeof en> = {
     viewDemo: '線上展示',
     privateRepo: '私有專案庫',
     thesisBadge: '碩士論文',
+
+    filterLabel: '篩選',
+    filterAll: '全部',
+    showing: '{shown} / {total}',
+    domains: {
+      causal: '因果推論',
+      fraud: '詐欺與風險',
+      forecasting: '預測',
+      modelling: '建模',
+      visualization: '視覺化',
+    },
     items: {
       circt: {
         name: 'CI-RCT',

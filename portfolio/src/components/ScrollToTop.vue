@@ -15,16 +15,18 @@ function toTop(): void {
 
 <template>
   <Transition
-    enter-active-class="transition duration-300"
-    enter-from-class="opacity-0 translate-y-2"
-    leave-active-class="transition duration-200"
-    leave-to-class="opacity-0 translate-y-2"
+    enter-active-class="transition duration-200"
+    enter-from-class="opacity-0 translate-y-1"
+    leave-active-class="transition duration-150"
+    leave-to-class="opacity-0 translate-y-1"
   >
+    <!-- Sits clear of the Dock, which is centred and bottom-flush. -->
     <button
       v-show="isVisible"
       type="button"
-      class="fixed bottom-24 right-6 z-dock w-10 h-10 grid place-items-center rounded-inner
-             chrome text-fg-muted hover:border-accent hover:text-accent transition-colors"
+      class="fixed bottom-4 right-4 z-dock w-10 h-10 grid place-items-center
+             bg-page border border-line text-fg-muted transition-colors duration-150
+             hover:bg-fg hover:border-fg hover:text-page"
       :aria-label="t('a11y.backToTop')"
       @click="toTop"
     >

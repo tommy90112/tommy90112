@@ -31,7 +31,10 @@ export default {
    */
   availability: {
     status: 'Open to work',
-    detail: 'Looking for data science and machine learning roles — Taipei or remote.',
+    detail:
+      'Looking for data science, machine learning, and software engineering roles — Taipei or remote.',
+    availableFrom: 'Available from {date}',
+    availableNow: 'Available immediately',
   },
 
   stats: {
@@ -89,6 +92,21 @@ export default {
     viewDemo: 'Live demo',
     privateRepo: 'Private repository',
     thesisBadge: "Master's thesis",
+
+    filterLabel: 'Filter',
+    filterAll: 'All',
+    showing: '{shown} / {total}',
+    /**
+     * Filter labels name the problem, not the method — someone hiring for
+     * fraud work searches for "fraud", not "heterogeneous graph transformer".
+     */
+    domains: {
+      causal: 'Causal inference',
+      fraud: 'Fraud & risk',
+      forecasting: 'Forecasting',
+      modelling: 'Modelling',
+      visualization: 'Visualization',
+    },
     items: {
       circt: {
         name: 'CI-RCT',

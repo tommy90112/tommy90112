@@ -13,8 +13,6 @@ import Contact from '@/components/Contact.vue'
 import Footer from '@/components/Footer.vue'
 import ScrollToTop from '@/components/ScrollToTop.vue'
 import Dock from '@/components/fx/Dock.vue'
-import ClickSpark from '@/components/fx/ClickSpark.vue'
-import PageBackdrop from '@/components/fx/PageBackdrop.vue'
 import type { DockItem } from '@/components/fx/types'
 import { CERTIFICATIONS, NAV_SECTIONS } from '@/data/site'
 import { useActiveSection } from '@/composables/useActiveSection'
@@ -52,13 +50,11 @@ function scrollToSection(id: string): void {
   <a
     href="#about"
     class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-skip
-           focus:px-4 focus:py-2 focus:rounded-inner focus:bg-accent focus:text-accent-on
-           focus:font-mono focus:text-xs"
+           focus:px-4 focus:py-2 focus:bg-accent focus:text-accent-on
+           focus:font-mono focus:text-xs focus:font-medium"
   >
     Skip to content
   </a>
-
-  <PageBackdrop />
 
   <Navbar />
 
@@ -77,5 +73,4 @@ function scrollToSection(id: string): void {
 
   <Dock :items="dockItems" @select="scrollToSection" />
   <ScrollToTop />
-  <ClickSpark />
 </template>

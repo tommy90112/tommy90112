@@ -42,7 +42,7 @@ const ICON_PATHS: Record<AwardEntry['icon'], string> = {
             >
               <div class="col-label flex items-center gap-3">
                 <span
-                  class="grid place-items-center w-8 h-8 rounded-inner border border-line
+                class="grid place-items-center w-8 h-8 border border-line
                          text-fg-faint shrink-0 transition-colors duration-300
                          group-hover/award:border-accent group-hover/award:text-accent"
                   aria-hidden="true"
@@ -59,7 +59,7 @@ const ICON_PATHS: Record<AwardEntry['icon'], string> = {
               <div class="col-body mt-4 md:mt-0 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
                 <div>
                   <h3
-                    class="text-lg text-fg m-0 text-pretty transition-colors duration-300
+                  class="text-lg text-fg m-0 text-pretty transition-colors duration-300
                            group-hover/award:text-accent"
                   >
                     {{ t(`awards.items.${award.id}.title`) }}

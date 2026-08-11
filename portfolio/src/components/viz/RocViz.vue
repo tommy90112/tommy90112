@@ -195,7 +195,7 @@ function opacityFor(id: string): number {
           @focus="active = model.id"
           @blur="active = null"
         >
-          <span class="w-3 h-0.5 rounded-full" :style="{ backgroundColor: model.colour }"></span>
+          <span class="w-3 h-0.5" :style="{ backgroundColor: model.colour }"></span>
           {{ model.label }}
           <span class="text-fg-faint">{{ strengthFor(model) }}</span>
         </button>

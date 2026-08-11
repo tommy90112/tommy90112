@@ -35,7 +35,7 @@ const { t } = useI18n()
           <div class="grid-12 py-6 md:py-7 group/skill">
             <dt class="col-label flex items-center gap-3 m-0">
               <span
-                class="grid place-items-center w-7 h-7 rounded-inner border border-line
+              class="grid place-items-center w-7 h-7 border border-line
                        text-fg-faint shrink-0 transition-colors duration-300
                        group-hover/skill:border-accent group-hover/skill:text-accent"
                 aria-hidden="true"

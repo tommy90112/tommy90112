@@ -10,8 +10,11 @@
 import { useI18n } from 'vue-i18n'
 import Reveal from '@/components/Reveal.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
+import { useAvailability } from '@/composables/useAvailability'
 
 const { t } = useI18n()
+
+const availability = useAvailability()
 
 const focusKeys = ['about.focus1', 'about.focus2', 'about.focus3', 'about.focus4'] as const
 </script>
@@ -45,17 +48,20 @@ const focusKeys = ['about.focus1', 'about.focus2', 'about.focus3', 'about.focus4
               the card never implies an ongoing position.
             -->
             <dl class="m-0 divide-y divide-line">
-              <div class="pb-4">
+              <div v-if="availability.isOpen.value" class="pb-4">
                 <dt class="sr-only">Availability</dt>
-                <dd class="m-0 flex items-center gap-2 text-accent">
+                <dd class="m-0 flex items-baseline gap-2 flex-wrap text-accent">
                   <span
-                    class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse-soft shrink-0"
+                    class="self-center w-1.5 h-1.5 rounded-full bg-accent animate-pulse-soft shrink-0"
                     aria-hidden="true"
                   ></span>
-                  <span class="font-mono text-[11px]">{{ t('availability.status') }}</span>
+                  <span class="font-mono text-[11px]">{{ availability.status.value }}</span>
+                  <span class="font-mono text-[11px] text-fg-faint">
+                    {{ availability.timing.value }}
+                  </span>
                 </dd>
               </div>
-              <div class="py-4">
+              <div :class="availability.isOpen.value ? 'py-4' : 'pb-4'">
                 <dt class="sr-only">Education</dt>
                 <dd class="text-fg m-0">{{ t('about.factsEducation') }}</dd>
               </div>

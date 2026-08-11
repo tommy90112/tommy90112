@@ -66,11 +66,12 @@ const BAR_W = 210
         v-for="option in (['causal', 'correlation'] as Mode[])"
         :key="option"
         type="button"
-        class="px-3 py-1.5 rounded-full font-mono text-[10px] uppercase tracking-wider transition-colors"
+        class="h-6 px-2.5 border font-mono text-[10px] font-medium uppercase tracking-[0.06em]
+               transition-colors duration-150"
         :class="
           mode === option
-            ? 'bg-accent/15 text-accent-soft border border-accent/40'
-            : 'text-fg-faint border border-transparent hover:text-fg-muted'
+            ? 'bg-fg border-fg text-page'
+            : 'border-line text-fg-faint hover:border-line-strong hover:text-fg'
         "
         :aria-pressed="mode === option"
         @click="mode = option"
@@ -114,14 +115,13 @@ const BAR_W = 210
           </text>
 
           <!-- Track -->
-          <rect :x="BAR_X" y="8" :width="BAR_W" height="12" rx="6" :style="{ fill: VIZ.track }" />
+          <rect :x="BAR_X" y="8" :width="BAR_W" height="12" :style="{ fill: VIZ.track }" />
           <!-- Value -->
           <rect
             :x="BAR_X"
             y="8"
             :width="BAR_W * valueOf(cause)"
             height="12"
-            rx="6"
             :style="{
               fill: mode === 'causal' ? VIZ.accent : VIZ.axis,
               transition: 'width 520ms cubic-bezier(0.22, 1, 0.36, 1), fill 300ms',
