@@ -17,6 +17,7 @@ import { useI18n } from 'vue-i18n'
 import { HERO_STATS } from '@/data/site'
 import { useAvailability } from '@/composables/useAvailability'
 import CausalViz from '@/components/viz/CausalViz.vue'
+import NodeField from '@/components/fx/NodeField.vue'
 import SplitText from '@/components/fx/SplitText.vue'
 import CountUp from '@/components/fx/CountUp.vue'
 
@@ -35,9 +36,12 @@ function scrollTo(id: string): void {
   <!-- Top padding is small because the sticky masthead now reserves its own
        64px in the flow rather than floating over this section. -->
   <section id="top" class="relative overflow-hidden pt-10 pb-14 md:pt-16 md:pb-20">
-    <!-- The module the content sits on, made visible. Not decoration: it is
-         the same 80px field the grid is built from. -->
+    <!-- The module the content sits on, made visible, with a graph drawn on
+         its intersections. Not decoration: it is the same 80px field the
+         layout is built from, and the pulse travelling through it is the
+         thesis in one gesture — intervene on a node, watch it propagate. -->
     <div class="absolute inset-0 grid-bg pointer-events-none" aria-hidden="true"></div>
+    <NodeField class="fade-down" :intensity="0.85" />
 
     <div class="container-x relative">
       <!-- Standing head: field on the left, status on the right, one rule. -->

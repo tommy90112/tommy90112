@@ -331,6 +331,13 @@
     mask-image: linear-gradient(to bottom, #000 0%, transparent 78%);
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 78%);
   }
+
+  /* Same falloff as `.grid-bg`, for the node layer drawn on top of it — the
+     two have to disappear together or the graph outlives its own grid. */
+  .fade-down {
+    mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 94%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 94%);
+  }
 }
 
 @layer utilities {
