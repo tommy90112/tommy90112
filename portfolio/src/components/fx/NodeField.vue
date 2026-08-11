@@ -50,8 +50,17 @@ const inkColour = useThemeChannels('fg-faint', '128, 128, 125')
 const accentColour = useThemeChannels('accent', '255, 74, 46')
 
 interface GraphNode {
+  /** Home position: the grid intersection this node belongs to. */
   x: number
   y: number
+  /**
+   * Rendered position. Equals the home position at rest and is pushed away
+   * from the pointer on approach, easing back when it leaves — so the graph
+   * is exactly on-grid whenever nobody is touching it, and yielding when
+   * somebody is.
+   */
+  cx: number
+  cy: number
   /** Indices into `edges` that touch this node. */
   edges: number[]
 }
@@ -86,6 +95,16 @@ const TRAIL_MS = 2600
 /** ms between the end of one wave and the start of the next. */
 const WAVE_GAP = 1600
 
+/**
+ * Pointer interaction. The push is deliberately a fraction of the module —
+ * enough that the graph visibly yields, small enough that a node never reads
+ * as having left its own intersection.
+ */
+const POINTER_RADIUS = 200
+const POINTER_PUSH = 22
+/** Per-frame easing toward the target position. Lower is heavier. */
+const EASE = 0.14
+
 let nodes: readonly GraphNode[] = []
 let edges: readonly Edge[] = []
 /** Per-node timestamp of the last pulse arrival; 0 means never. */
@@ -97,9 +116,14 @@ let litAt = new Float64Array(0)
  * propagation.
  */
 let edgeLitAt = new Float64Array(0)
+/** Per-node pointer nearness in [0, 1], recomputed each frame by `relax`. */
+let proximity = new Float64Array(0)
 
 let travels: Travel[] = []
 let nextWaveAt = 0
+
+/** Pointer in canvas space; null when it has left or was never over. */
+let pointer: { x: number; y: number } | null = null
 
 let frameId = 0
 let running = false
@@ -137,7 +161,9 @@ function buildGraph(): void {
       if (built.length >= MAX_NODES) break
       if (hash(gx, gy) > props.density) continue
       index.set(`${gx},${gy}`, built.length)
-      built.push({ x: gx * step, y: gy * step, edges: [] })
+      const x = gx * step
+      const y = gy * step
+      built.push({ x, y, cx: x, cy: y, edges: [] })
     }
   }
 
@@ -177,8 +203,48 @@ function buildGraph(): void {
   edges = builtEdges
   litAt = new Float64Array(built.length)
   edgeLitAt = new Float64Array(builtEdges.length)
+  proximity = new Float64Array(built.length)
   travels = []
   nextWaveAt = 0
+}
+
+/**
+ * Eases every node toward its target for this frame: its own intersection,
+ * displaced away from the pointer when the pointer is near.
+ *
+ * Falloff is quadratic rather than linear so the effect has a soft edge —
+ * with a linear ramp the outermost nodes pop as the radius crosses them.
+ * `proximity` is cached here rather than recomputed in `draw`, since both
+ * the displacement and the highlight need it.
+ */
+function relax(): void {
+  const p = pointer
+
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes[i]
+    if (!node) continue
+
+    let tx = node.x
+    let ty = node.y
+    let near = 0
+
+    if (p) {
+      const dx = node.x - p.x
+      const dy = node.y - p.y
+      const dist = Math.hypot(dx, dy)
+
+      if (dist < POINTER_RADIUS && dist > 0.01) {
+        near = (1 - dist / POINTER_RADIUS) ** 2
+        const push = near * POINTER_PUSH
+        tx += (dx / dist) * push
+        ty += (dy / dist) * push
+      }
+    }
+
+    proximity[i] = near
+    node.cx += (tx - node.cx) * EASE
+    node.cy += (ty - node.cy) * EASE
+  }
 }
 
 /** Starts a wave at a node that has somewhere to send it. */
@@ -267,6 +333,9 @@ function draw(now: number): void {
   const ink = inkColour.value
   const accent = accentColour.value
 
+  // Everything below draws from `cx`/`cy`, the pointer-displaced positions, so
+  // the edges bend with the nodes they connect instead of detaching from them.
+
   // Edges at rest, in one path — a single stroke for the whole graph rather
   // than one per edge.
   ctx.lineWidth = 1
@@ -276,10 +345,33 @@ function draw(now: number): void {
     const a = nodes[edge.a]
     const b = nodes[edge.b]
     if (!a || !b) continue
-    ctx.moveTo(a.x, a.y)
-    ctx.lineTo(b.x, b.y)
+    ctx.moveTo(a.cx, a.cy)
+    ctx.lineTo(b.cx, b.cy)
   }
   ctx.stroke()
+
+  // Edges under the pointer, lifted. Drawn per-edge because each one carries
+  // its own alpha — this is the pass that makes the cursor feel like it is
+  // touching the graph rather than floating over it.
+  for (let i = 0; i < edges.length; i++) {
+    const edge = edges[i]
+    const a = edge && nodes[edge.a]
+    const b = edge && nodes[edge.b]
+    if (!edge || !a || !b) continue
+
+    const near = Math.max(proximity[edge.a] ?? 0, proximity[edge.b] ?? 0)
+    if (near <= 0.01) continue
+
+    // Weight as well as alpha: a 1px line brightened in place is barely
+    // perceptible, and thickening is what makes the cursor feel like it has
+    // weight on the graph.
+    ctx.lineWidth = 1 + near * 0.9
+    ctx.strokeStyle = `rgba(${ink}, ${0.85 * near * alpha})`
+    ctx.beginPath()
+    ctx.moveTo(a.cx, a.cy)
+    ctx.lineTo(b.cx, b.cy)
+    ctx.stroke()
+  }
 
   // Edges a wave has already crossed, fading back out. Drawn over the resting
   // pass so the route the pulse took stays legible behind it.
@@ -297,8 +389,8 @@ function draw(now: number): void {
 
     ctx.strokeStyle = `rgba(${accent}, ${0.5 * trail * alpha})`
     ctx.beginPath()
-    ctx.moveTo(a.x, a.y)
-    ctx.lineTo(b.x, b.y)
+    ctx.moveTo(a.cx, a.cy)
+    ctx.lineTo(b.cx, b.cy)
     ctx.stroke()
   }
 
@@ -310,14 +402,14 @@ function draw(now: number): void {
     if (!from || !to) continue
 
     const t = Math.min((now - travel.startedAt) / travel.duration, 1)
-    const x = from.x + (to.x - from.x) * t
-    const y = from.y + (to.y - from.y) * t
+    const x = from.cx + (to.cx - from.cx) * t
+    const y = from.cy + (to.cy - from.cy) * t
 
     // The part already travelled is drawn at full strength, so the pulse has a
     // tail rather than being a bare dot.
     ctx.strokeStyle = `rgba(${accent}, ${0.7 * alpha})`
     ctx.beginPath()
-    ctx.moveTo(from.x, from.y)
+    ctx.moveTo(from.cx, from.cy)
     ctx.lineTo(x, y)
     ctx.stroke()
 
@@ -332,20 +424,26 @@ function draw(now: number): void {
 
     const since = now - (litAt[i] ?? 0)
     const glow = litAt[i] === 0 ? 0 : Math.max(0, 1 - since / GLOW_MS)
+    const near = proximity[i] ?? 0
 
     if (glow > 0) {
-      const size = 3.5 + glow * 2.5
+      // A pulse owns the node: accent wins over the pointer highlight, but the
+      // pointer still adds size, so the two effects compose instead of one
+      // cancelling the other.
+      const size = 3.5 + glow * 2.5 + near * 3.5
       ctx.fillStyle = `rgba(${accent}, ${(0.4 + 0.55 * glow) * alpha})`
-      ctx.fillRect(node.x - size / 2, node.y - size / 2, size, size)
+      ctx.fillRect(node.cx - size / 2, node.cy - size / 2, size, size)
     } else {
-      ctx.fillStyle = `rgba(${ink}, ${0.78 * alpha})`
-      ctx.fillRect(node.x - 1.75, node.y - 1.75, 3.5, 3.5)
+      const size = 3.5 + near * 3.5
+      ctx.fillStyle = `rgba(${ink}, ${(0.78 + 0.22 * near) * alpha})`
+      ctx.fillRect(node.cx - size / 2, node.cy - size / 2, size, size)
     }
   }
 }
 
 function loop(): void {
   const now = performance.now()
+  relax()
   step(now)
   draw(now)
   frameId = requestAnimationFrame(loop)
@@ -385,9 +483,56 @@ function onVisibilityChange(): void {
   else start()
 }
 
+/**
+ * Listens on the window, not the canvas: the canvas is `pointer-events-none`
+ * so that it never intercepts a click meant for the content sitting on top of
+ * it, which also means it receives no pointer events of its own.
+ *
+ * The position is only stored here; the work happens once per frame in
+ * `relax`, so a high-frequency pointer cannot outpace the render.
+ */
+function onPointerMove(event: PointerEvent): void {
+  const canvas = canvasRef.value
+  if (!canvas) return
+
+  const rect = canvas.getBoundingClientRect()
+  const x = event.clientX - rect.left
+  const y = event.clientY - rect.top
+
+  // Drop the pointer once it is a full radius outside the canvas, so nodes
+  // settle back home instead of straining toward a cursor in another section.
+  if (
+    x < -POINTER_RADIUS ||
+    y < -POINTER_RADIUS ||
+    x > rect.width + POINTER_RADIUS ||
+    y > rect.height + POINTER_RADIUS
+  ) {
+    pointer = null
+    return
+  }
+
+  pointer = { x, y }
+}
+
+function onPointerLeave(): void {
+  pointer = null
+}
+
 onMounted(() => {
   const canvas = canvasRef.value
   if (!canvas) return
+
+  // Coarse pointers have no hover to track, and reduced-motion means the
+  // graph is a static frame that should not react at all.
+  const pointerEnabled =
+    !prefersReduced.value &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(hover: hover) and (pointer: fine)').matches
+
+  if (pointerEnabled) {
+    window.addEventListener('pointermove', onPointerMove, { passive: true })
+    document.addEventListener('pointerleave', onPointerLeave)
+  }
 
   resize()
 
@@ -411,6 +556,8 @@ onUnmounted(() => {
   resizeObserver?.disconnect()
   intersectionObserver?.disconnect()
   document.removeEventListener('visibilitychange', onVisibilityChange)
+  window.removeEventListener('pointermove', onPointerMove)
+  document.removeEventListener('pointerleave', onPointerLeave)
 })
 
 // A theme flip changes the sampled colours; under reduced motion nothing is
@@ -422,6 +569,13 @@ watch([inkColour, accentColour], () => {
 watch(prefersReduced, (reduced) => {
   if (reduced) {
     stop()
+    // Drop any displacement so the static frame is the graph at rest, on-grid.
+    pointer = null
+    for (const node of nodes) {
+      node.cx = node.x
+      node.cy = node.y
+    }
+    proximity.fill(0)
     draw(performance.now())
   } else {
     start()
