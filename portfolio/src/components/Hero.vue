@@ -5,8 +5,8 @@
  * Everything hangs from the same left edge as every other section, and the
  * vertical order is strictly informational: what the field is, then who and
  * what, then the claim, then the evidence. No centring, no ambient colour, no
- * depth — the ambient wash and the particle field were removed because in this
- * style a background that moves is a background that competes.
+ * depth — the only thing behind the type is the particle field, kept faint and
+ * masked out well above the fold so the background stays background.
  *
  * The headline is one typeface at one weight, sized until it fills the measure;
  * the accent line is the thesis, and it is the only chromatic thing above the
@@ -17,7 +17,7 @@ import { useI18n } from 'vue-i18n'
 import { HERO_STATS } from '@/data/site'
 import { useAvailability } from '@/composables/useAvailability'
 import CausalViz from '@/components/viz/CausalViz.vue'
-import NodeField from '@/components/fx/NodeField.vue'
+import ParticleField from '@/components/fx/ParticleField.vue'
 import SplitText from '@/components/fx/SplitText.vue'
 import CountUp from '@/components/fx/CountUp.vue'
 
@@ -36,12 +36,12 @@ function scrollTo(id: string): void {
   <!-- Top padding is small because the sticky masthead now reserves its own
        64px in the flow rather than floating over this section. -->
   <section id="top" class="relative overflow-hidden pt-10 pb-14 md:pt-16 md:pb-20">
-    <!-- The module the content sits on, made visible, with a graph drawn on
-         its intersections. Not decoration: it is the same 80px field the
-         layout is built from, and the pulse travelling through it is the
-         thesis in one gesture — intervene on a node, watch it propagate. -->
-    <div class="absolute inset-0 grid-bg pointer-events-none" aria-hidden="true"></div>
-    <NodeField class="fade-down" :intensity="0.85" />
+    <!-- A drifting point field with proximity links. The ruled grid is gone:
+         it pinned the graph to the layout module, and a graph free to drift
+         reads against the module rather than with it. What is left is texture,
+         not a diagram — held to 80% so it stays under the type, and masked out
+         over the last stretch of the section so it doesn't run into the viz. -->
+    <ParticleField class="fade-down opacity-80" />
 
     <div class="container-x relative">
       <!-- Standing head: field on the left, status on the right, one rule. -->

@@ -320,20 +320,9 @@
   }
 
   /* ---- Texture -----------------------------------------------------------
-     The grid itself, drawn faintly. Not decoration — it is the same module the
-     content sits on, made visible behind the masthead. */
+     Falloff for the canvas background layer. The field has to be gone by the
+     time the reading column starts, or the type is set on top of movement. */
 
-  .grid-bg {
-    background-image:
-      linear-gradient(to right, rgb(var(--line) / 0.7) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(var(--line) / 0.7) 1px, transparent 1px);
-    background-size: 80px 80px;
-    mask-image: linear-gradient(to bottom, #000 0%, transparent 78%);
-    -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 78%);
-  }
-
-  /* Same falloff as `.grid-bg`, for the node layer drawn on top of it — the
-     two have to disappear together or the graph outlives its own grid. */
   .fade-down {
     mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 94%);
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 94%);
