@@ -105,6 +105,7 @@ export default {
       fraud: 'Fraud & risk',
       forecasting: 'Forecasting',
       modelling: 'Modelling',
+      analysis: 'Data analysis',
       visualization: 'Visualization',
     },
     items: {

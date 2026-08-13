@@ -104,7 +104,13 @@ export type ProjectSpan = 'full' | 'half'
  * with a graph transformer or a gradient boost. A project can sit in more than
  * one — most real work does.
  */
-export type ProjectDomain = 'causal' | 'fraud' | 'forecasting' | 'modelling' | 'visualization'
+export type ProjectDomain =
+  | 'causal'
+  | 'fraud'
+  | 'forecasting'
+  | 'modelling'
+  | 'analysis'
+  | 'visualization'
 
 /** Filter order. Not alphabetical — most central to the thesis first. */
 export const PROJECT_DOMAINS: readonly ProjectDomain[] = [
@@ -112,6 +118,7 @@ export const PROJECT_DOMAINS: readonly ProjectDomain[] = [
   'fraud',
   'forecasting',
   'modelling',
+  'analysis',
   'visualization',
 ] as const
 
@@ -163,14 +170,14 @@ export const PROJECTS: readonly Project[] = [
     domains: ['forecasting', 'modelling'],
   },
   {
-    id: 'stroke',
-    repo: 'https://github.com/tommy90112/Comparison-of-Machine-Learning-Methods-for-Stroke-Prediction',
-    demo: null,
-    stack: ['R', 'GAM', 'Random Forest', 'XGBoost'],
-    viz: 'roc',
+    id: 'mva',
+    repo: 'https://github.com/tommy90112/MVA-Internet-use-and-bullying',
+    demo: 'https://timwei0801.github.io/MVA-Internet-use-and-bullying/',
+    stack: ['R', 'Python', 'scikit-learn', 'SHAP', 'Vue', 'GSAP'],
+    viz: null,
     featured: false,
-    span: 'half',
-    domains: ['modelling'],
+    span: 'full',
+    domains: ['analysis', 'visualization'],
   },
   {
     id: 'cyberviz',
@@ -183,14 +190,14 @@ export const PROJECTS: readonly Project[] = [
     domains: ['visualization'],
   },
   {
-    id: 'mva',
-    repo: 'https://github.com/tommy90112/MVA-Internet-use-and-bullying',
-    demo: 'https://timwei0801.github.io/MVA-Internet-use-and-bullying/',
-    stack: ['R', 'Python', 'scikit-learn', 'SHAP', 'Vue', 'GSAP'],
-    viz: null,
+    id: 'stroke',
+    repo: 'https://github.com/tommy90112/Comparison-of-Machine-Learning-Methods-for-Stroke-Prediction',
+    demo: null,
+    stack: ['R', 'GAM', 'Random Forest', 'XGBoost'],
+    viz: 'roc',
     featured: false,
-    span: 'full',
-    domains: ['modelling', 'visualization'],
+    span: 'half',
+    domains: ['analysis', 'modelling'],
   },
 ] as const
 

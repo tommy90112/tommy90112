@@ -2,7 +2,7 @@
 /**
  * Domain filter for the work section.
  *
- * A row of toggles rather than a `<select>`: with six projects and five
+ * A row of toggles rather than a `<select>`: with six projects and six
  * domains, the counts are part of the information — seeing "fraud 1" tells a
  * visitor what is here before they click, which a collapsed dropdown cannot.
  *
