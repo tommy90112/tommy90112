@@ -273,7 +273,7 @@ const messages: Messages<typeof en> = {
   footer: {
     built: '以 Vue、Vite 與 Tailwind 建置。原始碼在 GitHub。',
     // TODO: 換成你的中文姓名。GitHub 上只有羅馬拼音 YUHUNG,SHIH，我不猜漢字。
-    rights: 'Yu-Hung Shih',
+    rights: 'YUHUNG,SHIH',
     privacy: '無流量分析、無 Cookie、無追蹤。',
   },
 
