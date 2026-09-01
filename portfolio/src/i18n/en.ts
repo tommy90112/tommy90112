@@ -17,7 +17,7 @@ export default {
     headlineEm: 'causal inference.',
     subline: 'MS Data Science, Tamkang University · Taipei, Taiwan',
     description:
-      'My thesis, CI-RCT, does causal root-cause tracing on graph neural networks. Alongside it I have worked on fraud detection, traffic forecasting, and health risk modelling.',
+      'My thesis, CI-RCT, proposes a framework for the question anomaly detectors leave open — where did this start? — by tracing backward through the graph with causal intervention. Alongside it I have worked on fraud detection, traffic forecasting, and health risk modelling.',
     ctaWork: 'See selected work',
     ctaContact: 'Get in touch',
     scroll: 'Scroll',
@@ -38,7 +38,7 @@ export default {
   },
 
   stats: {
-    thesis: { value: '0.95', label: 'AUC — thesis fraud detection' },
+    thesis: { value: '9-hop', label: 'causal chain traced back to its source' },
     records: { value: '770K+', label: 'transactions modelled' },
     award: { value: '2nd', label: 'national competition placing' },
   },
@@ -47,7 +47,7 @@ export default {
     eyebrow: 'About',
     title: 'Statistics first, then the graph.',
     p1: 'I came to machine learning through statistics, and it shows in the questions I ask. When a graph neural network flags an account as fraudulent, the useful answer is not a saliency map over its neighbours — it is which upstream cause is actually responsible, and what would have happened had that cause been absent.',
-    p2: 'That question is the subject of my master\'s thesis, CI-RCT: a root-cause tracing framework that applies structural causal models and do-calculus to heterogeneous graph neural networks. Instead of ranking features by correlation with the output, it intervenes on the graph and measures what changes.',
+    p2: 'That question is what my master\'s thesis, CI-RCT, sets out to answer. It proposes a framework that starts from a flagged node and walks backward through the graph — across node types, respecting time — asking at every hop not which neighbour correlates with the prediction, but what happens to it if that edge is cut. What comes out is a chain of causes a person can audit, not a heatmap.',
     p3: 'Outside the thesis I work across fraud and anomaly detection, traffic prediction, and health outcome modelling — usually where the interesting part is the structure of the data rather than the size of the model.',
     focusTitle: 'What I focus on',
     focus1: 'Causal root-cause tracing on heterogeneous graphs',
@@ -78,7 +78,7 @@ export default {
         role: 'MS, Data Science Program',
         period: 'Graduated',
         description:
-          'Master\'s research on causal intervention-based explainable root cause tracing for heterogeneous graph neural networks (CI-RCT).',
+          'Master\'s thesis: CI-RCT, a framework for explainable root-cause tracing on heterogeneous graphs based on causal intervention — from a flagged anomaly back to where it started.',
       },
     },
   },
@@ -113,13 +113,13 @@ export default {
         name: 'CI-RCT',
         tagline: 'Causal Intervention-Based Root Cause Tracing',
         description:
-          'A root-cause tracing framework for heterogeneous graph neural networks built on structural causal models and do-calculus. Rather than asking which features correlate with a prediction, CI-RCT intervenes on the graph to identify which causes are actually responsible — producing explanations that survive the question "what would have happened otherwise?"',
-        metric1: 'F1 0.85',
-        metric1Label: 'fraud detection',
-        metric2: 'AUC 0.95',
-        metric2Label: 'Elliptic++ benchmark',
-        metric3: 'Heterogeneous',
-        metric3Label: 'graph transformer backbone',
+          'Graph neural networks are good at flagging anomalies and weak at the question that follows: where did this start, and who caused it? CI-RCT is a framework built for that second half. From a flagged node it walks backward through a typed, time-ordered graph, choosing each hop by intervention — what changes if this edge is cut — rather than by correlation, and attaches a causal justification to every step. The result is a chain a person can audit. Defined over any heterogeneous graph that meets five conditions; instantiated on Elliptic++ Bitcoin fraud, where a trace with no knowledge of laundering typologies reproduced the signature of a peeling chain.',
+        metric1: 'do(·)',
+        metric1Label: 'intervention per edge, not correlation',
+        metric2: 'Backward',
+        metric2Label: 'from flagged node to root cause',
+        metric3: '5 conditions',
+        metric3Label: 'on the graph — any domain, no model changes',
         vizCaption:
           'The same candidate causes, ranked two ways. The orderings disagree — which is the argument for measuring responsibility under intervention rather than reading off correlation.',
       },

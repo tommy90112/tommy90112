@@ -54,9 +54,11 @@ I work at the intersection of **statistics, causal inference, and graph machine 
 ### 🧬 [CI-RCT — Causal Intervention-Based Root Cause Tracing](https://github.com/tommy90112/CI-RCT)
 > Master's thesis research
 
-A root-cause tracing methodology for heterogeneous graph neural networks, grounded in structural causal models and do-calculus. Instead of asking which features *correlate* with a prediction, CI-RCT intervenes on the graph to identify which causes are actually responsible. Validated on the **Elliptic++ Bitcoin fraud network**, reaching **F1 = 0.85** and **AUC = 0.95** on detection while producing traceable causal explanations.
+Graph neural networks are good at flagging anomalies, and weak at the question that follows: *where did this start, and who caused it?* CI-RCT is a methodological framework built for that second half. Given a flagged node, it walks **backward** along a time-respecting heterogeneous graph — crossing node types freely — and chooses each hop by **intervention** (what happens to the prediction if this edge is cut) rather than by correlation, attaching a causal justification to every step. The result is a chain a person can audit, not a saliency heatmap.
 
-`Heterogeneous Graph Transformer` · `SCM / do-calculus` · `PyTorch` · `Python`
+The method is not tied to a domain: any graph with typed nodes, timestamped directed edges and an operationalisable root-cause criterion is in scope — the origin of a fraudulent money flow, the entry point of lateral movement in a security incident, the source of a fault in an industrial process. The repository ships the **Elliptic++ Bitcoin** instantiation, where a trace produced with no knowledge of laundering typologies reproduced the structural signature of a nine-hop peeling chain.
+
+`Heterogeneous Graph Transformer` · `SCM / do-calculus` · `Causal Shapley` · `PyTorch Geometric` · `Python`
 
 [![lang](https://img.shields.io/github/languages/top/tommy90112/CI-RCT?style=flat-square)](https://github.com/tommy90112/CI-RCT)
 [![last commit](https://img.shields.io/github/last-commit/tommy90112/CI-RCT?style=flat-square)](https://github.com/tommy90112/CI-RCT/commits)
