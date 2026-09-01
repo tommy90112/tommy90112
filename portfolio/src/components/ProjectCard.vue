@@ -135,7 +135,7 @@ const metrics = computed(() =>
             {{ t(`projects.domains.${domain}`) }}
           </span>
           <span
-            v-if="project.featured && !project.repo"
+            v-if="project.thesis"
             class="ml-auto font-mono text-[10px] uppercase tracking-[0.1em] text-accent"
           >
             {{ t('projects.thesisBadge') }}

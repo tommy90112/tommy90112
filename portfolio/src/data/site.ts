@@ -130,8 +130,14 @@ export interface Project {
   demo: string | null
   stack: readonly string[]
   viz: VizKind
-  /** Thesis work gets a distinct badge and the leading slot. */
+  /** Featured work gets the accent bar and the leading slots. */
   featured: boolean
+  /**
+   * Master's thesis. Gets its own badge on the card. Kept separate from
+   * `repo` — the badge used to be inferred from "featured with no public
+   * repository", which stopped holding the day the thesis repo went public.
+   */
+  thesis: boolean
   /** Grid footprint. Order + span together define the rhythm. */
   span: ProjectSpan
   /** Problem domains this project belongs to; at least one. */
@@ -141,11 +147,12 @@ export interface Project {
 export const PROJECTS: readonly Project[] = [
   {
     id: 'circt',
-    repo: null,
+    repo: 'https://github.com/tommy90112/CI-RCT',
     demo: null,
     stack: ['Python', 'PyTorch', 'PyTorch Geometric', 'NetworkX', 'SCM / do-calculus'],
     viz: 'attribution',
     featured: true,
+    thesis: true,
     span: 'full',
     domains: ['causal'],
   },
@@ -156,6 +163,7 @@ export const PROJECTS: readonly Project[] = [
     stack: ['Python', 'XGBoost', 'LightGBM', 'CatBoost', 'SHAP', 'React', 'TypeScript'],
     viz: 'network',
     featured: true,
+    thesis: false,
     span: 'half',
     domains: ['fraud', 'modelling'],
   },
@@ -166,6 +174,7 @@ export const PROJECTS: readonly Project[] = [
     stack: ['Python', 'TensorFlow', 'FastAPI', 'Next.js', 'TypeScript'],
     viz: 'shockwave',
     featured: false,
+    thesis: false,
     span: 'half',
     domains: ['forecasting', 'modelling'],
   },
@@ -176,6 +185,7 @@ export const PROJECTS: readonly Project[] = [
     stack: ['R', 'Python', 'scikit-learn', 'SHAP', 'Vue', 'GSAP'],
     viz: null,
     featured: false,
+    thesis: false,
     span: 'full',
     domains: ['analysis', 'visualization'],
   },
@@ -186,6 +196,7 @@ export const PROJECTS: readonly Project[] = [
     stack: ['JavaScript', 'three.js', 'React', 'Python'],
     viz: null,
     featured: false,
+    thesis: false,
     span: 'half',
     domains: ['visualization'],
   },
@@ -196,6 +207,7 @@ export const PROJECTS: readonly Project[] = [
     stack: ['R', 'GAM', 'Random Forest', 'XGBoost'],
     viz: 'roc',
     featured: false,
+    thesis: false,
     span: 'half',
     domains: ['analysis', 'modelling'],
   },

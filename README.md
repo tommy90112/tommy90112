@@ -22,7 +22,8 @@
 
 ## About
 
-> 🟢 **Open to work** — looking for data science and machine learning roles, Taipei or remote.
+> 🟢 **Open to work** · available from September 2026
+> Looking for data science, machine learning, and software engineering roles — Taipei or remote.
 > Reach me at [tommy90112@gmail.com](mailto:tommy90112@gmail.com).
 
 I work at the intersection of **statistics, causal inference, and graph machine learning**. My research asks a question most GNN explainers skip: when a model flags a node as fraudulent, *which upstream cause actually drove that decision* — and can we prove it by intervening rather than by correlating?
@@ -50,12 +51,15 @@ I work at the intersection of **statistics, causal inference, and graph machine 
 
 ## Selected work
 
-### 🧬 CI-RCT — Causal Intervention-Based Root Cause Tracing
-> Master's thesis research · *private repository*
+### 🧬 [CI-RCT — Causal Intervention-Based Root Cause Tracing](https://github.com/tommy90112/CI-RCT)
+> Master's thesis research
 
 A root-cause tracing methodology for heterogeneous graph neural networks, grounded in structural causal models and do-calculus. Instead of asking which features *correlate* with a prediction, CI-RCT intervenes on the graph to identify which causes are actually responsible. Validated on the **Elliptic++ Bitcoin fraud network**, reaching **F1 = 0.85** and **AUC = 0.95** on detection while producing traceable causal explanations.
 
 `Heterogeneous Graph Transformer` · `SCM / do-calculus` · `PyTorch` · `Python`
+
+[![lang](https://img.shields.io/github/languages/top/tommy90112/CI-RCT?style=flat-square)](https://github.com/tommy90112/CI-RCT)
+[![last commit](https://img.shields.io/github/last-commit/tommy90112/CI-RCT?style=flat-square)](https://github.com/tommy90112/CI-RCT/commits)
 
 ---
 
